@@ -1,0 +1,64 @@
+---
+const { pathname } = Astro.url;
+const isActive = (href: string) => href === '/' ? pathname === '/' : pathname.startsWith(href);
+
+const links = [
+  { href: '/', label: 'Home' },
+  { href: '/programs', label: 'Programs' },
+  { href: '/about', label: 'About' },
+  { href: '/blog', label: 'Blog' },
+  { href: '/prompts', label: 'Prompts' },
+  { href: '/donate', label: 'Donate' },
+  { href: '/contact', label: 'Contact' },
+];
+---
+
+<header class="sticky top-0 z-40 border-b border-steel-700/50 bg-steel-900/80 backdrop-blur supports-[backdrop-filter]:bg-steel-900/60">
+  <div class="container-wide flex h-16 items-center justify-between">
+    <a href="/" class="flex items-center gap-3" aria-label="Blue Collar Labs home">
+      <img src="/logos/logo-icon.png" alt="" class="h-9 w-9" />
+      <span class="text-sm font-bold uppercase tracking-[0.18em] text-white">Blue Collar Labs</span>
+    </a>
+    <nav class="hidden md:flex items-center gap-1">
+      {links.map((link) => (
+        <a
+          href={link.href}
+          class={`rounded-md px-3 py-2 text-sm font-medium transition ${
+            isActive(link.href)
+              ? 'text-white bg-steel-800'
+              : 'text-steel-300 hover:text-white hover:bg-steel-800/60'
+          }`}
+        >
+          {link.label}
+        </a>
+      ))}
+    </nav>
+    <div class="flex items-center gap-2">
+      <a href="/donate" class="btn-primary hidden sm:inline-flex !py-2 !px-4 text-xs">Donate</a>
+      <button
+        id="mobile-nav-toggle"
+        class="md:hidden rounded-md p-2 text-steel-300 hover:text-white hover:bg-steel-800"
+        aria-label="Toggle navigation"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M3 5.75A.75.75 0 013.75 5h12.5a.75.75 0 010 1.5H3.75A.75.75 0 013 5.75zM3 10a.75.75 0 01.75-.75h12.5a.75.75 0 010 1.5H3.75A.75.75 0 013 10zm0 4.25a.75.75 0 01.75-.75h12.5a.75.75 0 010 1.5H3.75a.75.75 0 01-.75-.75z" clip-rule="evenodd" />
+        </svg>
+      </button>
+    </div>
+  </div>
+  <div id="mobile-nav" class="md:hidden hidden border-t border-steel-700/50 bg-steel-900">
+    <nav class="container-wide flex flex-col py-3">
+      {links.map((link) => (
+        <a href={link.href} class="rounded-md px-3 py-2 text-sm font-medium text-steel-200 hover:bg-steel-800 hover:text-white">
+          {link.label}
+        </a>
+      ))}
+    </nav>
+  </div>
+</header>
+
+<script>
+  const toggle = document.getElementById('mobile-nav-toggle');
+  const menu = document.getElementById('mobile-nav');
+  toggle?.addEventListener('click', () => menu?.classList.toggle('hidden'));
+</script>

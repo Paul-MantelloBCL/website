@@ -1,0 +1,98 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const tiers = [
+  { amount: 25, blurb: 'Powers a workshop seat for one tradesperson' },
+  { amount: 100, blurb: 'Funds a security audit hour for a small shop' },
+  { amount: 500, blurb: 'Sponsors a contractor in the AI-Ready Tradesman cert' },
+  { amount: 2500, blurb: 'Subsidizes a full pilot deployment for one shop' },
+];
+const pillars = [
+  { name: 'Pilot', amount: '$50k', alloc: 'Ops', body: "Funds operations, 501(c)(3) filing, and early staff for one quarter. Gets the nonprofit out of the founder's pocket and onto firm ground." },
+  { name: 'Build', amount: '$75k', alloc: 'BUILD', body: 'Engineering + deployment of the Truck Inventory and AI Estimator tools to the first 50 pilot contractors.' },
+  { name: 'Teach', amount: '$100k', alloc: 'TEACH', body: 'Instructional design, workshop production, and free-tier subsidy for the AI-Ready Tradesman certificate.' },
+  { name: 'Defend', amount: '$75k', alloc: 'DEFEND', body: "Audit tooling, certs, and free-tier subsidy for shops that can't afford a proper security review." },
+];
+---
+<Layout title="Donate — Blue Collar Labs">
+  <section class="container-wide pt-20 pb-12">
+    <p class="eyebrow">Donate</p>
+    <h1 class="mt-3 text-4xl md:text-5xl font-extrabold">
+      Fund a pillar.<br /><span class="text-volt-500">Fund the trades.</span>
+    </h1>
+    <p class="mt-6 max-w-2xl text-lg text-steel-300">
+      We're seeking catalytic grants of $50k–$300k to stand up a 501(c)(3) that will serve 10 million underserved workers. Every dollar is tracked against measurable outcomes: tools deployed, tradespeople certified, shops hardened.
+    </p>
+    <div class="mt-8 flex flex-wrap gap-3">
+      <a href="https://donorbox.org/bluecollar-labs" target="_blank" rel="noopener" class="btn-primary !py-3.5 !px-6 text-base">Donate now →</a>
+      <a href="/contact" class="btn-secondary">Talk to us first</a>
+    </div>
+  </section>
+
+  <section class="container-wide py-8">
+    <div class="rounded-2xl border border-steel-700/60 bg-steel-800/40 p-8 md:p-10">
+      <p class="eyebrow">Quick give</p>
+      <h2 class="mt-3 text-2xl font-bold">Pick an amount, pick an outcome.</h2>
+      <p class="mt-3 text-steel-300 max-w-2xl">Every gift is tracked to a specific outcome. Click an amount to open the donation page pre-filled.</p>
+      <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {tiers.map((t) => (
+          <a href={`https://donorbox.org/bluecollar-labs?amount=${t.amount}`} target="_blank" rel="noopener" class="group rounded-xl border border-steel-700/60 bg-steel-900/40 p-5 transition hover:border-volt-500/60 hover:bg-steel-900/70">
+            <div class="text-3xl font-extrabold text-volt-500">${t.amount}</div>
+            <p class="mt-3 text-sm text-steel-300">{t.blurb}</p>
+            <p class="mt-4 text-xs font-semibold uppercase tracking-wider text-steel-400 group-hover:text-volt-500">Give →</p>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="container-wide py-8">
+    <div class="rounded-2xl border border-volt-500/30 bg-gradient-to-br from-volt-500/10 to-transparent p-8 md:p-10">
+      <p class="eyebrow">SROI</p>
+      <h2 class="mt-3 text-3xl font-bold">$1 donated → $80–$160 in tradesperson value</h2>
+      <p class="mt-4 max-w-3xl text-steel-300">Tools save hours. Training wins jobs. Audits stop losses. Measured in aggregate across our three-year target: 2,500 tool users, 5,000 certified tradespeople, 250 hardened shops.</p>
+    </div>
+  </section>
+
+  <section class="container-wide py-12">
+    <p class="eyebrow">Funding tiers</p>
+    <h2 class="mt-3 text-3xl font-bold">Where the money goes</h2>
+    <div class="mt-8 grid gap-6 md:grid-cols-2">
+      {pillars.map((p) => (
+        <div class="card">
+          <div class="flex items-baseline justify-between">
+            <h3 class="text-xl font-bold">{p.name}</h3>
+            <span class="text-2xl font-extrabold text-volt-500">{p.amount}</span>
+          </div>
+          <p class="mt-2 text-xs uppercase tracking-wider text-steel-400">Allocation: {p.alloc}</p>
+          <p class="mt-4 text-steel-300">{p.body}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="container-wide py-12">
+    <div class="rounded-2xl border border-steel-700/60 bg-steel-800/40 p-8 md:p-10">
+      <p class="eyebrow">Ways to give</p>
+      <h2 class="mt-3 text-2xl font-bold">Grants, gifts, and partnerships</h2>
+      <div class="mt-6 grid gap-4 md:grid-cols-3 text-sm text-steel-200">
+        <div class="rounded-lg border border-steel-700/60 bg-steel-900/40 p-5">
+          <strong class="text-white">Grants</strong><br />
+          <span class="text-steel-300">Foundations and corporate funders — we maintain a rolling pipeline (OpenAI People-First AI, IBM Impact, Google.org, NSF SBIR).</span>
+        </div>
+        <div class="rounded-lg border border-steel-700/60 bg-steel-900/40 p-5">
+          <strong class="text-white">Individual gifts</strong><br />
+          <span class="text-steel-300">One-time or recurring. Tax-deductible once 501(c)(3) determination is finalized.</span>
+        </div>
+        <div class="rounded-lg border border-steel-700/60 bg-steel-900/40 p-5">
+          <strong class="text-white">Partnerships</strong><br />
+          <span class="text-steel-300">Supplier co-funding, CSR programs, trade-association sponsorships.</span>
+        </div>
+      </div>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a href="/contact" class="btn-primary">Request the pitch deck</a>
+        <a href="/contact" class="btn-secondary">Schedule a call</a>
+      </div>
+    </div>
+  </section>
+</Layout>

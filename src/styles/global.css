@@ -1,0 +1,32 @@
+@import '@fontsource-variable/inter';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html { font-family: theme('fontFamily.sans'); }
+  body { @apply bg-steel-900 text-steel-100; }
+}
+
+@layer components {
+  .container-wide {
+    @apply mx-auto w-full max-w-6xl px-5 sm:px-6 lg:px-8;
+  }
+
+  .eyebrow {
+    @apply text-xs font-semibold uppercase tracking-[0.18em] text-volt-500;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-md bg-volt-500 px-5 py-2.5 text-sm font-semibold text-steel-900 transition hover:bg-volt-400 focus:outline-none focus:ring-2 focus:ring-volt-500/60;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center rounded-md border border-steel-700 bg-steel-800/40 px-5 py-2.5 text-sm font-semibold text-white transition hover:border-volt-500/60 hover:text-volt-500 focus:outline-none focus:ring-2 focus:ring-volt-500/60;
+  }
+
+  .card {
+    @apply block rounded-2xl border border-steel-700/60 bg-steel-800/40 p-6 md:p-8 transition hover:border-volt-500/40;
+  }
+}
