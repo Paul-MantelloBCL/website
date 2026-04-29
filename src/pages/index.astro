@@ -58,13 +58,13 @@ import Layout from '../layouts/Layout.astro';
           <p class="mt-6 text-sm font-semibold text-volt-500 group-hover:text-volt-400">Learn more →</p>
         </div>
       </a>
-      <a href="/programs#teach" class="card group relative overflow-hidden">
+      <a href="/school" class="card group relative overflow-hidden">
         <div class="pointer-events-none absolute inset-0 bg-gradient-to-br from-tradeblue-500/20 to-transparent"></div>
         <div class="relative">
           <p class="eyebrow">TEACH</p>
           <h3 class="mt-3 text-xl font-bold">Applied AI literacy</h3>
-          <p class="mt-3 text-sm text-steel-300">Weekend workshops and a 4-week "AI-Ready Tradesman" certificate. Free tier for low-income tradesmen via grant subsidy.</p>
-          <p class="mt-6 text-sm font-semibold text-volt-500 group-hover:text-volt-400">Learn more →</p>
+          <p class="mt-3 text-sm text-steel-300">4-week "AI-Ready Tradesman" certificate. Founding 25 cohort opening soon — join the waitlist.</p>
+          <p class="mt-6 text-sm font-semibold text-volt-500 group-hover:text-volt-400">Join the waitlist →</p>
         </div>
       </a>
       <a href="/programs#defend" class="card group relative overflow-hidden">
@@ -115,9 +115,10 @@ import Layout from '../layouts/Layout.astro';
           <h2 class="mt-3 text-2xl md:text-3xl font-bold">Quarterly updates from the field.</h2>
           <p class="mt-3 text-steel-300 max-w-md">No spam. New tools, workshop dates, pilot results, and the occasional rant about clipboards. Unsubscribe whenever.</p>
         </div>
-        <form name="newsletter" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/thanks" class="flex flex-col sm:flex-row gap-3">
+        <form name="newsletter" method="POST" action="/.netlify/functions/waitlist" class="flex flex-col sm:flex-row gap-3">
           <input type="hidden" name="form-name" value="newsletter" />
-          <p class="hidden"><label>Don't fill this out: <input name="bot-field" /></label></p>
+          <input type="hidden" name="source" value="/index footer" />
+          <p class="hidden" aria-hidden="true"><label>Don't fill this out: <input name="bot-field" tabindex="-1" autocomplete="off" /></label></p>
           <input
             type="email"
             name="email"

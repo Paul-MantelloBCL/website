@@ -1,0 +1,185 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+<Layout
+  title="BCL School — Join the waitlist"
+  description="Applied AI literacy for tradesmen. Founding-25 cohort opening soon. Join the waitlist to claim a seat at founding pricing."
+>
+  <section class="relative overflow-hidden">
+    <div class="absolute inset-0 -z-10 bg-gradient-to-b from-steel-800 via-steel-900 to-steel-900"></div>
+    <div class="absolute inset-x-0 top-0 -z-10 h-96 bg-[radial-gradient(ellipse_at_top,theme(colors.volt.500/15),transparent_60%)]"></div>
+    <div class="container-wide pt-20 pb-16 md:pt-28 md:pb-20">
+      <p class="eyebrow">BCL School · Founding 25 cohort</p>
+      <h1 class="mt-4 max-w-4xl text-4xl sm:text-5xl md:text-6xl font-extrabold leading-[1.05]">
+        AI for tradesmen.<br />
+        <span class="text-volt-500">No fluff. No CS degree required.</span>
+      </h1>
+      <p class="mt-6 max-w-2xl text-lg text-steel-300">
+        A 4-week applied program built by working tradespeople. You ship 5 real AI workflows you can use Monday morning — estimating, ordering, invoicing, customer comms, and shop-defense basics. The first 25 students get founding pricing, weekly office hours with the founders, and lifetime access to every future module.
+      </p>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a href="#waitlist" class="btn-primary">Join the waitlist</a>
+        <a href="/programs#teach" class="btn-secondary">See the full Teach pillar →</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="container-wide py-12">
+    <div class="grid gap-6 md:grid-cols-3">
+      <div class="rounded-xl border border-steel-700/60 bg-steel-900/40 p-6">
+        <p class="eyebrow">Format</p>
+        <h3 class="mt-2 text-lg font-bold">4 weeks · self-paced · live calls</h3>
+        <p class="mt-2 text-sm text-steel-300">Pre-recorded modules you watch on the truck or on the couch. One live group call per week. Direct DM access to the founders inside the cohort.</p>
+      </div>
+      <div class="rounded-xl border border-steel-700/60 bg-steel-900/40 p-6">
+        <p class="eyebrow">Outcome</p>
+        <h3 class="mt-2 text-lg font-bold">5 working AI workflows</h3>
+        <p class="mt-2 text-sm text-steel-300">By week 4 you've built and used: an estimator helper, an invoice cleaner, a vendor-callback drill, a phishing-spot checklist, and a voice-first jobsite note-taker.</p>
+      </div>
+      <div class="rounded-xl border border-steel-700/60 bg-steel-900/40 p-6">
+        <p class="eyebrow">Founding 25 perks</p>
+        <h3 class="mt-2 text-lg font-bold">Cheaper, deeper, forever</h3>
+        <p class="mt-2 text-sm text-steel-300">Founding pricing locked in. Weekly office hours with Paul and the team. Lifetime access to every future module BCL ships.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="container-wide py-12">
+    <div class="card">
+      <p class="eyebrow">Curriculum preview</p>
+      <h2 class="mt-3 text-3xl font-bold">What you'll actually learn</h2>
+      <div class="mt-8 grid gap-6 md:grid-cols-2">
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-wider text-volt-500">Week 1</p>
+          <h3 class="mt-1 text-lg font-bold">Spotting fakes — phishing &amp; voice clones</h3>
+          <p class="mt-2 text-sm text-steel-300">Real invoices vs. fake ones. The vendor-callback rule. What a deepfake voicemail sounds like and how to drill your AP person against it.</p>
+        </div>
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-wider text-volt-500">Week 2</p>
+          <h3 class="mt-1 text-lg font-bold">Estimating with AI without getting burned</h3>
+          <p class="mt-2 text-sm text-steel-300">Walk-through to bid in under an hour. When to trust the AI, when to override it, and what to NEVER paste into a chatbot.</p>
+        </div>
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-wider text-volt-500">Week 3</p>
+          <h3 class="mt-1 text-lg font-bold">The voice-first day</h3>
+          <p class="mt-2 text-sm text-steel-300">Hands-free jobsite notes. Materials lists from a 30-second voice memo. Customer follow-ups dictated between stops.</p>
+        </div>
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-wider text-volt-500">Week 4</p>
+          <h3 class="mt-1 text-lg font-bold">Shop hardening &amp; certification</h3>
+          <p class="mt-2 text-sm text-steel-300">SPF/DKIM/DMARC in plain English. MFA rollouts that don't break the office. Final project: pick one workflow, ship it, present it. AI-Ready Tradesman cert.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="waitlist" class="container-wide py-16">
+    <div class="rounded-2xl border border-volt-500/30 bg-volt-500/5 p-8 md:p-12">
+      <div class="grid gap-10 md:grid-cols-[1fr_1.2fr] md:items-start">
+        <div>
+          <p class="eyebrow">Founding 25 waitlist</p>
+          <h2 class="mt-3 text-3xl font-bold">Claim a seat.</h2>
+          <p class="mt-4 text-steel-300">No payment yet — just first dibs when enrollment opens. We'll email you the founding pricing, the start date, and a one-question screener to make sure the cohort is a fit.</p>
+          <ul class="mt-6 space-y-2 text-sm text-steel-300">
+            <li>• 25 seats. First-come, first-served.</li>
+            <li>• Founding price locked in for life.</li>
+            <li>• Free seat for low-income tradespeople — flag it on the form.</li>
+          </ul>
+        </div>
+        <form
+          name="school-waitlist"
+          method="POST"
+          action="/.netlify/functions/waitlist"
+          class="grid gap-4"
+        >
+          <input type="hidden" name="form-name" value="school-waitlist" />
+          <input type="hidden" name="source" value="/school" />
+          <p class="hidden" aria-hidden="true"><label>Don't fill this out: <input name="bot-field" tabindex="-1" autocomplete="off" /></label></p>
+
+          <label class="grid gap-1.5">
+            <span class="text-sm font-semibold text-steel-200">Name</span>
+            <input
+              type="text"
+              name="name"
+              required
+              autocomplete="name"
+              placeholder="First and last"
+              class="w-full rounded-md border border-steel-700 bg-steel-900/80 px-4 py-3 text-steel-100 placeholder:text-steel-500 focus:outline-none focus:ring-2 focus:ring-volt-500/60 focus:border-volt-500/60"
+            />
+          </label>
+
+          <label class="grid gap-1.5">
+            <span class="text-sm font-semibold text-steel-200">Email</span>
+            <input
+              type="email"
+              name="email"
+              required
+              autocomplete="email"
+              placeholder="you@yourshop.com"
+              class="w-full rounded-md border border-steel-700 bg-steel-900/80 px-4 py-3 text-steel-100 placeholder:text-steel-500 focus:outline-none focus:ring-2 focus:ring-volt-500/60 focus:border-volt-500/60"
+            />
+          </label>
+
+          <label class="grid gap-1.5">
+            <span class="text-sm font-semibold text-steel-200">Trade</span>
+            <select
+              name="trade"
+              required
+              class="w-full rounded-md border border-steel-700 bg-steel-900/80 px-4 py-3 text-steel-100 focus:outline-none focus:ring-2 focus:ring-volt-500/60 focus:border-volt-500/60"
+            >
+              <option value="">Pick one…</option>
+              <option value="electrical">Electrical</option>
+              <option value="plumbing">Plumbing</option>
+              <option value="hvac">HVAC</option>
+              <option value="carpentry">Carpentry / framing</option>
+              <option value="general">General contracting</option>
+              <option value="mechanical">Mechanical / auto</option>
+              <option value="landscaping">Landscaping / hardscape</option>
+              <option value="roofing">Roofing</option>
+              <option value="other">Other</option>
+            </select>
+          </label>
+
+          <label class="grid gap-1.5">
+            <span class="text-sm font-semibold text-steel-200">Shop size</span>
+            <select
+              name="shop_size"
+              required
+              class="w-full rounded-md border border-steel-700 bg-steel-900/80 px-4 py-3 text-steel-100 focus:outline-none focus:ring-2 focus:ring-volt-500/60 focus:border-volt-500/60"
+            >
+              <option value="">Pick one…</option>
+              <option value="1">1 (just me)</option>
+              <option value="2-5">2–5</option>
+              <option value="6-15">6–15</option>
+              <option value="16-50">16–50</option>
+              <option value="50+">50+</option>
+            </select>
+          </label>
+
+          <label class="grid gap-1.5">
+            <span class="text-sm font-semibold text-steel-200">Biggest AI question right now</span>
+            <textarea
+              name="biggest_question"
+              rows="3"
+              placeholder="Optional. e.g., 'how do I stop my AP person falling for fake invoice emails?'"
+              class="w-full rounded-md border border-steel-700 bg-steel-900/80 px-4 py-3 text-steel-100 placeholder:text-steel-500 focus:outline-none focus:ring-2 focus:ring-volt-500/60 focus:border-volt-500/60"
+            ></textarea>
+          </label>
+
+          <label class="flex items-start gap-3 text-sm text-steel-300">
+            <input
+              type="checkbox"
+              name="needs_subsidy"
+              value="yes"
+              class="mt-1 h-4 w-4 rounded border-steel-600 bg-steel-900 text-volt-500 focus:ring-volt-500/60"
+            />
+            <span>I'd like to be considered for a grant-subsidized free seat. (No proof required at this stage.)</span>
+          </label>
+
+          <button type="submit" class="btn-primary mt-2">Join the waitlist</button>
+          <p class="text-xs text-steel-400">We'll never sell your email. Unsubscribe whenever.</p>
+        </form>
+      </div>
+    </div>
+  </section>
+</Layout>
