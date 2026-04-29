@@ -1,0 +1,15 @@
+{
+  "domain": "bluecollarlabs.org",
+  "version": "1.0.0",
+  "checked_at": "2026-04-29T14:32:32Z",
+  "section_b_score": 13,
+  "section_b_max": 16,
+  "tier": "CRITICAL",
+  "findings": {
+    "B1_provider":  {"score": 1, "max": 4, "value": "Google Workspace", "reason": "MX → *.google.com (Google Workspace)"},
+    "B2_spf":       {"score": 2, "max": 4, "record": "v=spf1 include:_spf.google.com ~all",   "reason": "SPF soft fail (~all) — receivers may still accept spoofed mail"},
+    "B3_dkim":      {"score": 2, "max": 4, "selectors_found": ["google"], "reason": "DKIM published on 1 selector (google) — verify all senders are signed"},
+    "B4_dmarc":     {"score": 4, "max": 4, "policy": "", "record": "", "reason": "DMARC not published"},
+    "B5_reporting": {"score": 4, "max": 4, "rua": "",    "reason": "No DMARC reporting addresses (rua= missing)"}
+  }
+}

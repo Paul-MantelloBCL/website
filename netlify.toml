@@ -1,6 +1,8 @@
 [build]
 publish = "dist"
-command = "npm run build"
+# Refresh the DNS-posture badge in public/ (best-effort: keeps prior badge if
+# `dig` is missing in the build image), then run the normal Astro build.
+command = "./scripts/netlify-hook.sh bluecollarlabs.org public && npm run build"
 
 [build.environment]
 NODE_VERSION = "22"

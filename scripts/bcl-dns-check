@@ -1,0 +1,226 @@
+#!/usr/bin/env bash
+# bcl-dns-check — one-command SPF/DKIM/DMARC posture report for a domain.
+#
+# Maps directly to Section B of the BCL phishing-audit intake (workspace/audits/phishing-audit-intake.md).
+# Outputs a 0-16 Section B subtotal plus per-question rationale.
+#
+# Usage:
+#   bcl-dns-check <domain>                    # pretty terminal output
+#   bcl-dns-check <domain> --json             # machine-readable JSON
+#   bcl-dns-check <domain> --selector main    # add a non-default DKIM selector
+#   bcl-dns-check <domain> --quiet            # only print the score line
+#
+# Dependencies: bash, dig (typically /usr/bin/dig). No network access beyond DNS.
+
+set -uo pipefail
+
+VERSION="1.0.0"
+PROG="$(basename "$0")"
+
+# ---------- arg parsing ----------
+DOMAIN=""
+JSON=0
+QUIET=0
+SELECTORS=("default" "google" "selector1" "selector2" "k1" "mail" "dkim" "s1" "s2")
+
+usage() {
+  cat <<EOF
+$PROG v$VERSION — SPF/DKIM/DMARC posture report
+
+Usage:
+  $PROG <domain> [--json] [--quiet] [--selector NAME]...
+
+Options:
+  --json              Emit machine-readable JSON instead of human output
+  --quiet             Only print the Section B score
+  --selector NAME     Add a DKIM selector to probe (repeatable). Defaults probed:
+                      ${SELECTORS[*]}
+  -h, --help          Show this help
+
+Exit codes:
+  0  posture acceptable (Section B score <= 4 / 16)
+  1  posture concerning (5-9)
+  2  posture critical   (10+)
+  3  invocation error
+EOF
+}
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --json)     JSON=1; shift ;;
+    --quiet)    QUIET=1; shift ;;
+    --selector) shift; [[ -z "${1:-}" ]] && { echo "missing selector name" >&2; exit 3; }; SELECTORS+=("$1"); shift ;;
+    -h|--help)  usage; exit 0 ;;
+    -*)         echo "unknown option: $1" >&2; usage >&2; exit 3 ;;
+    *)          if [[ -z "$DOMAIN" ]]; then DOMAIN="$1"; shift; else echo "extra arg: $1" >&2; exit 3; fi ;;
+  esac
+done
+
+[[ -z "$DOMAIN" ]] && { usage >&2; exit 3; }
+command -v dig >/dev/null 2>&1 || { echo "dig not found in PATH" >&2; exit 3; }
+
+# ---------- pretty helpers ----------
+if [[ -t 1 ]]; then
+  C_RED=$'\033[31m'; C_YEL=$'\033[33m'; C_GRN=$'\033[32m'; C_BLU=$'\033[34m'; C_DIM=$'\033[2m'; C_BOLD=$'\033[1m'; C_RST=$'\033[0m'
+else
+  C_RED=""; C_YEL=""; C_GRN=""; C_BLU=""; C_DIM=""; C_BOLD=""; C_RST=""
+fi
+
+# ---------- raw DNS lookups ----------
+dig_txt()  { dig +short TXT  "$1" 2>/dev/null | sed 's/^"//; s/"$//; s/" "//g'; }
+dig_mx()   { dig +short MX   "$1" 2>/dev/null | sort -n; }
+
+SPF_TXT=$(dig_txt "$DOMAIN" | grep -i 'v=spf1' | head -n1)
+DMARC_TXT=$(dig_txt "_dmarc.$DOMAIN" | grep -i 'v=DMARC1' | head -n1)
+MX_RAW=$(dig_mx "$DOMAIN")
+
+# ---------- B1: provider inference from MX ----------
+B1_SCORE=4
+B1_REASON="No MX records (cannot infer provider) — assume worst case"
+B1_PROVIDER="unknown"
+if [[ -n "$MX_RAW" ]]; then
+  MX_HOSTS=$(echo "$MX_RAW" | awk '{print tolower($2)}')
+  if echo "$MX_HOSTS" | grep -qE '\.(outlook|protection\.outlook)\.com\.?$'; then
+    B1_PROVIDER="Microsoft 365"; B1_SCORE=1; B1_REASON="MX → *.outlook.com (Microsoft 365)"
+  elif echo "$MX_HOSTS" | grep -qE 'google\.com\.?$|googlemail\.com\.?$'; then
+    B1_PROVIDER="Google Workspace"; B1_SCORE=1; B1_REASON="MX → *.google.com (Google Workspace)"
+  elif echo "$MX_HOSTS" | grep -qE 'mail\.protonmail\.ch\.?$|protonmail'; then
+    B1_PROVIDER="ProtonMail"; B1_SCORE=1; B1_REASON="MX → ProtonMail"
+  elif echo "$MX_HOSTS" | grep -qE 'fastmail|messagingengine'; then
+    B1_PROVIDER="Fastmail"; B1_SCORE=1; B1_REASON="MX → Fastmail"
+  elif echo "$MX_HOSTS" | grep -qE 'mimecast\.com\.?$|mimecast\.co\.uk\.?$|barracuda|proofpoint|trendmicro|cisco\.com\.?$'; then
+    B1_PROVIDER="Mail security gateway (provider behind it unclear)"; B1_SCORE=2; B1_REASON="MX → security gateway; underlying provider not visible"
+  else
+    B1_PROVIDER="Self-hosted / hosted IMAP / unknown"; B1_SCORE=3; B1_REASON="MX → $(echo "$MX_HOSTS" | head -1) (not a major SaaS provider)"
+  fi
+fi
+
+# ---------- B2: SPF ----------
+B2_SCORE=4
+B2_REASON="No SPF record published"
+if [[ -n "$SPF_TXT" ]]; then
+  if echo "$SPF_TXT" | grep -qE '[[:space:]]-all\b'; then
+    B2_SCORE=0; B2_REASON="SPF strict (-all)"
+  elif echo "$SPF_TXT" | grep -qE '[[:space:]]~all\b'; then
+    B2_SCORE=2; B2_REASON="SPF soft fail (~all) — receivers may still accept spoofed mail"
+  elif echo "$SPF_TXT" | grep -qE '[[:space:]]\?all\b'; then
+    B2_SCORE=3; B2_REASON="SPF neutral (?all) — provides almost no protection"
+  elif echo "$SPF_TXT" | grep -qE '[[:space:]]\+all\b'; then
+    B2_SCORE=4; B2_REASON="SPF allow-all (+all) — actively dangerous"
+  else
+    B2_SCORE=3; B2_REASON="SPF published but no terminating qualifier — ambiguous"
+  fi
+fi
+
+# ---------- B3: DKIM (probe selectors) ----------
+B3_SCORE=4
+B3_REASON="No DKIM records found at common selectors"
+B3_FOUND=()
+for sel in "${SELECTORS[@]}"; do
+  txt=$(dig_txt "${sel}._domainkey.$DOMAIN")
+  if echo "$txt" | grep -qiE 'v=DKIM1|p=[A-Za-z0-9+/]'; then
+    B3_FOUND+=("$sel")
+  fi
+done
+if [[ ${#B3_FOUND[@]} -ge 2 ]]; then
+  B3_SCORE=0; B3_REASON="DKIM published on ${#B3_FOUND[@]} selectors: ${B3_FOUND[*]}"
+elif [[ ${#B3_FOUND[@]} -eq 1 ]]; then
+  B3_SCORE=2; B3_REASON="DKIM published on 1 selector (${B3_FOUND[0]}) — verify all senders are signed"
+fi
+
+# ---------- B4 / B5: DMARC ----------
+B4_SCORE=4
+B4_REASON="DMARC not published"
+B5_SCORE=4
+B5_REASON="No DMARC reporting addresses (rua= missing)"
+DMARC_POLICY=""
+DMARC_RUA=""
+if [[ -n "$DMARC_TXT" ]]; then
+  DMARC_POLICY=$(echo "$DMARC_TXT" | grep -oiE 'p=[a-z]+' | head -1 | cut -d= -f2 | tr 'A-Z' 'a-z')
+  case "$DMARC_POLICY" in
+    reject)     B4_SCORE=0; B4_REASON="DMARC p=reject (strict)" ;;
+    quarantine) B4_SCORE=1; B4_REASON="DMARC p=quarantine" ;;
+    none)       B4_SCORE=3; B4_REASON="DMARC p=none — published but enforcement off (monitor-only)" ;;
+    *)          B4_SCORE=4; B4_REASON="DMARC published but policy unrecognized: $DMARC_POLICY" ;;
+  esac
+  DMARC_RUA=$(echo "$DMARC_TXT" | grep -oiE 'rua=[^;[:space:]]+' | head -1)
+  if [[ -n "$DMARC_RUA" ]]; then
+    B5_SCORE=2
+    B5_REASON="DMARC rua= present ($DMARC_RUA) — collection set up, but reports must be reviewed regularly to score 0"
+  fi
+fi
+
+# ---------- total ----------
+TOTAL=$(( B1_SCORE + B2_SCORE + B3_SCORE + B4_SCORE + B5_SCORE ))
+
+if   (( TOTAL <= 4 ));  then TIER_LABEL="ACCEPTABLE";  TIER_COLOR="$C_GRN"; EXIT=0
+elif (( TOTAL <= 9 ));  then TIER_LABEL="CONCERNING"; TIER_COLOR="$C_YEL"; EXIT=1
+else                         TIER_LABEL="CRITICAL";    TIER_COLOR="$C_RED"; EXIT=2
+fi
+
+# ---------- output ----------
+if (( JSON )); then
+  esc() { printf '%s' "$1" | sed 's/\\/\\\\/g; s/"/\\"/g; s/\t/\\t/g' | tr '\n' ' '; }
+  cat <<EOF
+{
+  "domain": "$(esc "$DOMAIN")",
+  "version": "$VERSION",
+  "checked_at": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+  "section_b_score": $TOTAL,
+  "section_b_max": 16,
+  "tier": "$TIER_LABEL",
+  "findings": {
+    "B1_provider":  {"score": $B1_SCORE, "max": 4, "value": "$(esc "$B1_PROVIDER")", "reason": "$(esc "$B1_REASON")"},
+    "B2_spf":       {"score": $B2_SCORE, "max": 4, "record": "$(esc "$SPF_TXT")",   "reason": "$(esc "$B2_REASON")"},
+    "B3_dkim":      {"score": $B3_SCORE, "max": 4, "selectors_found": [$(printf '"%s",' "${B3_FOUND[@]}" | sed 's/,$//')], "reason": "$(esc "$B3_REASON")"},
+    "B4_dmarc":     {"score": $B4_SCORE, "max": 4, "policy": "$(esc "$DMARC_POLICY")", "record": "$(esc "$DMARC_TXT")", "reason": "$(esc "$B4_REASON")"},
+    "B5_reporting": {"score": $B5_SCORE, "max": 4, "rua": "$(esc "$DMARC_RUA")",    "reason": "$(esc "$B5_REASON")"}
+  }
+}
+EOF
+  exit $EXIT
+fi
+
+if (( QUIET )); then
+  printf "%s: Section B = %d/16 (%s)\n" "$DOMAIN" "$TOTAL" "$TIER_LABEL"
+  exit $EXIT
+fi
+
+# pretty mode
+print_row() {
+  local code="$1" name="$2" score="$3" max="$4" reason="$5"
+  local color="$C_GRN"
+  if   (( score >= max ));        then color="$C_RED"
+  elif (( score * 2 >= max ));    then color="$C_YEL"
+  fi
+  printf "  %s%-3s%s  %s%-22s%s  %s%d/%d%s   %s\n" \
+    "$C_BOLD" "$code" "$C_RST" \
+    "$C_DIM" "$name" "$C_RST" \
+    "$color" "$score" "$max" "$C_RST" \
+    "$reason"
+}
+
+echo
+printf "%sbcl-dns-check%s  %s%s%s\n" "$C_BOLD" "$C_RST" "$C_BLU" "$DOMAIN" "$C_RST"
+echo
+print_row "B1" "Provider"        "$B1_SCORE" 4 "$B1_REASON"
+print_row "B2" "SPF"             "$B2_SCORE" 4 "$B2_REASON"
+print_row "B3" "DKIM"            "$B3_SCORE" 4 "$B3_REASON"
+print_row "B4" "DMARC policy"    "$B4_SCORE" 4 "$B4_REASON"
+print_row "B5" "DMARC reporting" "$B5_SCORE" 4 "$B5_REASON"
+echo
+printf "  %sSection B subtotal:%s  %s%d/16%s   %s%s%s\n" \
+  "$C_BOLD" "$C_RST" "$TIER_COLOR$C_BOLD" "$TOTAL" "$C_RST" \
+  "$TIER_COLOR$C_BOLD" "$TIER_LABEL" "$C_RST"
+echo
+
+# raw records summary (only in pretty mode, for the auditor)
+if [[ -n "$SPF_TXT" || -n "$DMARC_TXT" || -n "$MX_RAW" ]]; then
+  printf "  %sRaw records%s\n" "$C_DIM" "$C_RST"
+  [[ -n "$MX_RAW"    ]] && echo "    MX:    $(echo "$MX_RAW"    | head -1)$( [[ $(echo "$MX_RAW" | wc -l) -gt 1 ]] && echo " (+more)")"
+  [[ -n "$SPF_TXT"   ]] && echo "    SPF:   $SPF_TXT"
+  [[ -n "$DMARC_TXT" ]] && echo "    DMARC: $DMARC_TXT"
+  echo
+fi
+
+exit $EXIT

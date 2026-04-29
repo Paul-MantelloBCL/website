@@ -1,0 +1,143 @@
+---
+import Layout from '../layouts/Layout.astro';
+import fs from 'node:fs';
+import path from 'node:path';
+
+// Load the latest dns-posture snapshot at build time. The file is refreshed
+// by scripts/netlify-hook.sh before `npm run build` runs.
+const postureFile = path.resolve('./public/dns-posture.json');
+let posture: any = null;
+try {
+  posture = JSON.parse(fs.readFileSync(postureFile, 'utf8'));
+} catch (_) {
+  posture = null;
+}
+
+const tier = posture?.tier ?? 'UNKNOWN';
+const score = posture?.section_b_score ?? '?';
+const max = posture?.section_b_max ?? 16;
+const checkedAt = posture?.checked_at ?? '';
+const findings = posture?.findings ?? {};
+
+const tierColor =
+  tier === 'ACCEPTABLE' ? 'text-volt-500' :
+  tier === 'CONCERNING' ? 'text-yellow-400' :
+  tier === 'CRITICAL'   ? 'text-red-500' :
+                          'text-steel-300';
+
+function rowColor(s: number, m: number) {
+  if (s === 0) return 'text-volt-500';
+  if (s * 2 <= m) return 'text-yellow-400';
+  return 'text-red-500';
+}
+
+const rows = [
+  { code: 'B1', name: 'Mail provider',     ...findings.B1_provider },
+  { code: 'B2', name: 'SPF policy',         ...findings.B2_spf },
+  { code: 'B3', name: 'DKIM signing',       ...findings.B3_dkim },
+  { code: 'B4', name: 'DMARC policy',       ...findings.B4_dmarc },
+  { code: 'B5', name: 'DMARC reporting',    ...findings.B5_reporting },
+];
+
+const checkedDate = checkedAt
+  ? new Date(checkedAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+  : '';
+---
+<Layout
+  title="Trust — Blue Collar Labs"
+  description="We run our own DEFEND audit on bluecollarlabs.org and publish the score. Eat your own dogfood."
+>
+  <section class="container-wide pt-20 pb-8">
+    <p class="eyebrow">Trust</p>
+    <h1 class="mt-3 text-4xl md:text-5xl font-extrabold">
+      We run our own audit.<br>
+      <span class="text-volt-500">And we publish the score.</span>
+    </h1>
+    <p class="mt-6 max-w-2xl text-lg text-steel-300">
+      Our DEFEND program audits trade-shop email security against five DNS
+      controls (SPF, DKIM, DMARC, mail-provider posture, reporting). We run
+      the same check on <code class="text-volt-500">bluecollarlabs.org</code>
+      every time this site builds — and we ship the result here, good or bad.
+    </p>
+  </section>
+
+  <section class="container-wide py-8">
+    <div class="card">
+      <div class="flex items-center justify-between gap-6 flex-wrap">
+        <div>
+          <p class="eyebrow">DNS posture audit</p>
+          <h2 class="mt-2 text-3xl font-extrabold">
+            <span>{score}/{max}</span>
+            <span class={`ml-3 text-xl ${tierColor}`}>{tier}</span>
+          </h2>
+          <p class="mt-2 text-sm text-steel-300">
+            Domain: <span class="text-white">{posture?.domain ?? 'bluecollarlabs.org'}</span>
+            {checkedDate && <> · Last checked: <span class="text-white">{checkedDate}</span></>}
+          </p>
+        </div>
+        <img src="/dns-posture.svg" alt={`DNS posture: ${score} of ${max} ${tier}`} class="h-22" />
+      </div>
+
+      <p class="mt-6 text-sm text-steel-300">
+        Lower is better. 0–4 = Acceptable, 5–9 = Concerning, 10+ = Critical.
+        Same scoring rubric we apply to clients in a paid DEFEND audit.
+      </p>
+
+      <div class="mt-6 overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="border-b border-steel-700/60 text-left text-steel-400 uppercase tracking-[0.15em] text-xs">
+              <th class="py-2 pr-4">Control</th>
+              <th class="py-2 pr-4">Score</th>
+              <th class="py-2">Finding</th>
+            </tr>
+          </thead>
+          <tbody class="text-steel-200">
+            {rows.map(r => (
+              <tr class="border-b border-steel-800">
+                <td class="py-3 pr-4">
+                  <span class="font-bold text-white">{r.code}</span>
+                  <span class="ml-2 text-steel-400">{r.name}</span>
+                </td>
+                <td class={`py-3 pr-4 font-bold whitespace-nowrap ${rowColor(r.score ?? 4, r.max ?? 4)}`}>
+                  {r.score}/{r.max}
+                </td>
+                <td class="py-3 text-steel-300">{r.reason}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="container-wide py-8">
+    <div class="grid gap-6 md:grid-cols-2">
+      <div class="card">
+        <p class="eyebrow">Why publish a bad score</p>
+        <p class="mt-3 text-steel-300">
+          If we hide our own gaps we have no business charging shops to find
+          theirs. If the badge above says CRITICAL, it means we have work to
+          do — and we'd rather you see that than pretend otherwise. Check
+          back; the score updates on every deploy.
+        </p>
+      </div>
+      <div class="card">
+        <p class="eyebrow">Want this for your shop?</p>
+        <p class="mt-3 text-steel-300">
+          A DEFEND audit covers the same five DNS controls plus inbox-rule
+          forensics, signage, and a staff phishing drill. Plain-language
+          report, no jargon, owner-readable.
+        </p>
+        <a href="/programs#defend" class="btn-secondary mt-5">See DEFEND →</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="container-wide py-12 pb-20">
+    <p class="text-xs text-steel-400">
+      Audit tool source: <code>tools/bcl-dns-check</code> in our public workspace.
+      No data leaves your network when we run this — DNS lookups only.
+    </p>
+  </section>
+</Layout>
