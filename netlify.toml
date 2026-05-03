@@ -1,8 +1,8 @@
 [build]
 publish = "dist"
-# Refresh the DNS-posture badge in public/ (best-effort: keeps prior badge if
-# `dig` is missing in the build image), then run the normal Astro build.
-command = "./scripts/netlify-hook.sh bluecollarlabs.org public && npm run build"
+# Prebuild hook (DNS-posture badge refresh) wraps `npm run build`. If the hook
+# fails, Netlify still deploys the last-good badge that's checked into public/.
+command = "bash ./scripts/netlify-hook.sh bluecollarlabs.org public || echo 'netlify-hook.sh failed (non-fatal)'; npm run build"
 
 [build.environment]
 NODE_VERSION = "22"
