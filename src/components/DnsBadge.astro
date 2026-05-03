@@ -1,0 +1,59 @@
+---
+// Compact "eat-our-own-dogfood" DNS-posture badge.
+//
+// Reads /public/dns-posture.json at build time (refreshed by the Netlify
+// prebuild hook) and renders a small footer-sized chip linking to /trust.
+// If the JSON is missing or unparseable, the badge silently renders nothing
+// — a build with no DNS data should not crash the site.
+import fs from 'node:fs';
+import path from 'node:path';
+
+let posture: any = null;
+try {
+  const raw = fs.readFileSync(path.resolve('./public/dns-posture.json'), 'utf8');
+  posture = JSON.parse(raw);
+} catch (_) {
+  posture = null;
+}
+
+const tier = posture?.tier ?? null;
+const score = posture?.section_b_score ?? null;
+const max = posture?.section_b_max ?? 16;
+const checkedAt = posture?.checked_at ?? '';
+
+let dateStr = '';
+if (checkedAt) {
+  try {
+    dateStr = new Date(checkedAt).toLocaleDateString('en-US', {
+      month: 'short', day: 'numeric', year: 'numeric',
+    });
+  } catch (_) {
+    dateStr = checkedAt;
+  }
+}
+
+const tierColor =
+  tier === 'ACCEPTABLE' ? 'text-volt-500 border-volt-500/40' :
+  tier === 'CONCERNING' ? 'text-yellow-400 border-yellow-400/40' :
+  tier === 'CRITICAL'   ? 'text-red-500 border-red-500/40' :
+                          'text-steel-300 border-steel-700/60';
+
+const dotColor =
+  tier === 'ACCEPTABLE' ? 'bg-volt-500' :
+  tier === 'CONCERNING' ? 'bg-yellow-400' :
+  tier === 'CRITICAL'   ? 'bg-red-500' :
+                          'bg-steel-500';
+---
+{posture && tier && (
+  <a
+    href="/trust"
+    aria-label={`BCL DNS posture: ${score} of ${max}, ${tier}. Checked ${dateStr}. View full report.`}
+    class={`inline-flex items-center gap-2 rounded-md border px-3 py-1.5 text-xs font-mono transition hover:bg-steel-800/50 ${tierColor}`}
+  >
+    <span class={`inline-block h-2 w-2 rounded-full ${dotColor}`} aria-hidden="true"></span>
+    <span class="text-steel-300">DNS posture</span>
+    <span class="font-bold">{score}/{max}</span>
+    <span class="uppercase tracking-wider">{tier}</span>
+    {dateStr && <span class="text-steel-400 hidden sm:inline">· {dateStr}</span>}
+  </a>
+)}
