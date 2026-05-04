@@ -1,0 +1,97 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const effective = 'May 3, 2026';
+---
+<Layout title="Privacy — Blue Collar Labs" description="Privacy policy for Blue Collar Labs Academy products including the Spark plugin for Even Realities G2 glasses.">
+  <section class="container-wide pt-20 pb-8">
+    <p class="eyebrow">Privacy</p>
+    <h1 class="mt-3 text-4xl md:text-5xl font-extrabold">
+      Privacy policy
+    </h1>
+    <p class="mt-3 text-sm text-steel-400">Effective {effective}</p>
+    <p class="mt-6 max-w-2xl text-lg text-steel-300">
+      Blue Collar Labs Academy is a New Jersey 501(c)(3) nonprofit. This policy
+      covers the data practices for our products — the Blue Collar Labs website
+      (<code class="text-volt-500">bluecollarlabs.org</code>), the BCL App, and
+      <strong>Spark</strong>, our free plugin for Even Realities G2 smart glasses.
+    </p>
+  </section>
+
+  <section class="container-wide py-8 max-w-3xl">
+    <h2 class="text-2xl font-bold">1. What we collect</h2>
+    <p class="mt-3 text-steel-300">When you sign in to Spark or the BCL App we collect:</p>
+    <ul class="mt-3 space-y-2 text-steel-300 list-disc pl-6">
+      <li><strong>Email address</strong> — used to send a one-time 6-digit sign-in code and to associate your queries with your account.</li>
+      <li><strong>Audio captured by the glasses microphone</strong> — only while Spark is open and you are actively speaking. Audio chunks are sent to our speech-to-text service for transcription and are not retained after transcription completes.</li>
+      <li><strong>Transcribed text and assistant replies</strong> — sent to our self-hosted inference gateway to generate a response. Conversation history persists in memory only for the lifetime of the open session and is discarded when you close the plugin.</li>
+      <li><strong>Diagnostic logs</strong> — minimal request metadata (timestamp, status code, response time) for reliability monitoring. No audio, transcripts, or replies are written to logs.</li>
+    </ul>
+
+    <h2 class="mt-10 text-2xl font-bold">2. What we do not collect</h2>
+    <ul class="mt-3 space-y-2 text-steel-300 list-disc pl-6">
+      <li>We do not record video, photos, or images. Spark does not access the camera.</li>
+      <li>We do not collect location data.</li>
+      <li>We do not sell, rent, or share your data with advertisers.</li>
+      <li>We do not use your conversations to train AI models.</li>
+    </ul>
+
+    <h2 class="mt-10 text-2xl font-bold">3. Permissions Spark requests</h2>
+    <ul class="mt-3 space-y-2 text-steel-300 list-disc pl-6">
+      <li><strong><code class="text-volt-500">g2-microphone</code></strong> — Spark needs the glasses microphone to hear your question. Audio is captured only while the plugin is open and is sent only to our speech-to-text service.</li>
+      <li><strong><code class="text-volt-500">network</code></strong> — Spark connects to <code class="text-volt-500">ebelzohvuzdavpgwxtdo.supabase.co</code> to verify your sign-in and to route transcription and chat requests through our backend. No other domains are contacted from the plugin.</li>
+    </ul>
+
+    <h2 class="mt-10 text-2xl font-bold">4. Where your data goes</h2>
+    <ul class="mt-3 space-y-2 text-steel-300 list-disc pl-6">
+      <li><strong>Supabase</strong> (San Francisco, CA) — handles authentication and runs the edge functions that broker your requests. They store your email and a hashed sign-in token. Their privacy policy is at <a class="text-volt-500 underline" href="https://supabase.com/privacy" target="_blank" rel="noopener">supabase.com/privacy</a>.</li>
+      <li><strong>Cloudflare</strong> (San Francisco, CA) — fronts the tunnel between Supabase and our self-hosted inference server. Cloudflare may temporarily process traffic to deliver it but does not retain content.</li>
+      <li><strong>Blue Collar Labs Academy inference gateway</strong> — runs on hardware we own and operate in New Jersey. Speech-to-text uses faster-whisper (open source). Chat completions use Qwen 2.5 7B (open source) running locally. Neither model is connected to any third-party AI provider.</li>
+    </ul>
+
+    <h2 class="mt-10 text-2xl font-bold">5. Data retention</h2>
+    <p class="mt-3 text-steel-300">
+      Audio is processed in transit and not stored. Transcripts and replies live
+      only in your active session and are discarded when you close the plugin or
+      sign out. Your email and account record are retained until you ask us to
+      delete them.
+    </p>
+
+    <h2 class="mt-10 text-2xl font-bold">6. Your rights</h2>
+    <p class="mt-3 text-steel-300">
+      You can request deletion of your account and any associated records at any
+      time by emailing <a class="text-volt-500 underline" href="mailto:privacy@bluecollarlabs.org">privacy@bluecollarlabs.org</a>.
+      We will confirm deletion within 30 days. If you are a California, Virginia,
+      Colorado, Connecticut, or Utah resident, you have additional rights under
+      your state's privacy law and may exercise them via the same email.
+    </p>
+
+    <h2 class="mt-10 text-2xl font-bold">7. Children</h2>
+    <p class="mt-3 text-steel-300">
+      Spark and the BCL App are not directed to children under 13. We do not
+      knowingly collect data from children under 13. If you believe a child has
+      provided data to us, contact us and we will delete it.
+    </p>
+
+    <h2 class="mt-10 text-2xl font-bold">8. Security</h2>
+    <p class="mt-3 text-steel-300">
+      Sign-in is JWT-based and traffic is encrypted in transit (TLS 1.2+). The
+      gateway secret that authenticates our edge functions to the inference
+      backend is held server-side and never shipped to the plugin or app.
+    </p>
+
+    <h2 class="mt-10 text-2xl font-bold">9. Changes</h2>
+    <p class="mt-3 text-steel-300">
+      We will post any material changes to this page and update the effective
+      date above. Continued use of Spark or the BCL App after a change means
+      you accept the updated policy.
+    </p>
+
+    <h2 class="mt-10 text-2xl font-bold">10. Contact</h2>
+    <p class="mt-3 text-steel-300">
+      Blue Collar Labs Academy<br>
+      Middletown, NJ<br>
+      <a class="text-volt-500 underline" href="mailto:privacy@bluecollarlabs.org">privacy@bluecollarlabs.org</a>
+    </p>
+  </section>
+</Layout>
