@@ -7,6 +7,18 @@ command = "bash ./scripts/netlify-hook.sh bluecollarlabs.org public || echo 'net
 [build.environment]
 NODE_VERSION = "22"
 
+[[redirects]]
+from = "/academy"
+to = "/school"
+status = 301
+force = true
+
+[[redirects]]
+from = "/academy/*"
+to = "/school/:splat"
+status = 301
+force = true
+
 [[headers]]
 for = "/*"
   [headers.values]
