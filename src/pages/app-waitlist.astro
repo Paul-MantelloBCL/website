@@ -1,0 +1,180 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+<Layout
+  title="BCL App — Join the waitlist"
+  description="The Blue Collar Labs app is coming soon. AI coach in your pocket — every trade, free to begin. Join the waitlist to get first access on iOS or Android."
+  ogImage="/og/school.png"
+>
+  <section class="relative overflow-hidden">
+    <div class="absolute inset-0 -z-10 bg-gradient-to-b from-steel-800 via-steel-900 to-steel-900"></div>
+    <div class="absolute inset-x-0 top-0 -z-10 h-96 bg-[radial-gradient(ellipse_at_top,theme(colors.volt.500/15),transparent_60%)]"></div>
+    <div class="container-wide pt-20 pb-12 md:pt-28 md:pb-16">
+      <p class="eyebrow">BCL App · Coming soon</p>
+      <h1 class="mt-4 max-w-4xl text-4xl sm:text-5xl md:text-6xl font-extrabold leading-[1.05]">
+        AI coach in your pocket.<br />
+        <span class="text-volt-500">Every trade. Built by tradesmen.</span>
+      </h1>
+      <p class="mt-6 max-w-2xl text-lg text-steel-300">
+        Ask any AI question about your trade and get a useful answer — in plain language, with the safety, code, and credentialed-work caveats called out plainly. Snap a photo of a panel, a plate, a part, a wound on the shop dog if you have to. We're polishing the last edges.
+      </p>
+      <p class="mt-3 max-w-2xl text-base text-steel-400">
+        Drop your name on the waitlist and we'll ping you the second TestFlight + Play Store builds open up.
+      </p>
+    </div>
+  </section>
+
+  <section class="container-wide py-8">
+    <div class="grid gap-10 lg:grid-cols-[1.1fr_1fr] lg:items-start">
+      <div class="card">
+        <p class="eyebrow">Waitlist intake</p>
+        <h2 class="mt-3 text-2xl font-bold">Get first access.</h2>
+        <p class="mt-3 text-steel-300">Five fields. Under a minute. We don't sell or share your info — see <a href="/privacy" class="text-volt-500 underline-offset-4 hover:underline">/privacy</a>.</p>
+
+        <form
+          name="app-waitlist"
+          method="POST"
+          action="/.netlify/functions/waitlist"
+          class="mt-6 grid gap-4"
+        >
+          <input type="hidden" name="form-name" value="app-waitlist" />
+          <input type="hidden" name="source" value="Web direct" />
+          <p class="hidden" aria-hidden="true"><label>Don't fill this out: <input name="bot-field" tabindex="-1" autocomplete="off" /></label></p>
+
+          <label class="grid gap-1.5">
+            <span class="text-sm font-semibold text-steel-200">Your name</span>
+            <input
+              type="text"
+              name="name"
+              required
+              autocomplete="name"
+              placeholder="First + last"
+              class="w-full rounded-md border border-steel-700 bg-steel-900/80 px-4 py-3 text-steel-100 placeholder:text-steel-500 focus:outline-none focus:ring-2 focus:ring-volt-500/60 focus:border-volt-500/60"
+            />
+          </label>
+
+          <label class="grid gap-1.5">
+            <span class="text-sm font-semibold text-steel-200">Email</span>
+            <input
+              type="email"
+              name="email"
+              required
+              autocomplete="email"
+              placeholder="you@email.com"
+              class="w-full rounded-md border border-steel-700 bg-steel-900/80 px-4 py-3 text-steel-100 placeholder:text-steel-500 focus:outline-none focus:ring-2 focus:ring-volt-500/60 focus:border-volt-500/60"
+            />
+          </label>
+
+          <label class="grid gap-1.5">
+            <span class="text-sm font-semibold text-steel-200">Your trade</span>
+            <select
+              name="trade"
+              required
+              class="w-full rounded-md border border-steel-700 bg-steel-900/80 px-4 py-3 text-steel-100 focus:outline-none focus:ring-2 focus:ring-volt-500/60 focus:border-volt-500/60"
+            >
+              <option value="">Pick one…</option>
+              <option value="Electrician">Electrician</option>
+              <option value="Plumber">Plumber</option>
+              <option value="HVAC">HVAC</option>
+              <option value="Mechanic">Mechanic</option>
+              <option value="Body Shop">Body shop</option>
+              <option value="Welder">Welder</option>
+              <option value="Carpenter">Carpenter</option>
+              <option value="Painter">Painter</option>
+              <option value="GC / Builder">GC / Builder</option>
+              <option value="Roofer">Roofer</option>
+              <option value="Landscaper">Landscaper</option>
+              <option value="Chef / Cook">Chef / Cook</option>
+              <option value="Cosmetologist">Cosmetologist</option>
+              <option value="Stylist">Stylist</option>
+              <option value="Barber">Barber</option>
+              <option value="Esthetician">Esthetician</option>
+              <option value="Other">Other</option>
+            </select>
+          </label>
+
+          <div class="grid gap-4 md:grid-cols-2">
+            <label class="grid gap-1.5">
+              <span class="text-sm font-semibold text-steel-200">Where you sit</span>
+              <select
+                name="role"
+                class="w-full rounded-md border border-steel-700 bg-steel-900/80 px-4 py-3 text-steel-100 focus:outline-none focus:ring-2 focus:ring-volt-500/60 focus:border-volt-500/60"
+              >
+                <option value="">Pick one…</option>
+                <option value="Apprentice">Apprentice</option>
+                <option value="Journeyman">Journeyman</option>
+                <option value="Owner">Owner</option>
+                <option value="Other">Other</option>
+              </select>
+            </label>
+
+            <label class="grid gap-1.5">
+              <span class="text-sm font-semibold text-steel-200">Phone</span>
+              <select
+                name="platform"
+                class="w-full rounded-md border border-steel-700 bg-steel-900/80 px-4 py-3 text-steel-100 focus:outline-none focus:ring-2 focus:ring-volt-500/60 focus:border-volt-500/60"
+              >
+                <option value="Either">iOS or Android — either</option>
+                <option value="iOS">iOS</option>
+                <option value="Android">Android</option>
+              </select>
+            </label>
+          </div>
+
+          <label class="grid gap-1.5">
+            <span class="text-sm font-semibold text-steel-200">State <span class="text-steel-500 font-normal">(optional)</span></span>
+            <input
+              type="text"
+              name="state"
+              maxlength="60"
+              placeholder="e.g. NJ"
+              class="w-full rounded-md border border-steel-700 bg-steel-900/80 px-4 py-3 text-steel-100 placeholder:text-steel-500 focus:outline-none focus:ring-2 focus:ring-volt-500/60 focus:border-volt-500/60"
+            />
+          </label>
+
+          <label class="grid gap-1.5">
+            <span class="text-sm font-semibold text-steel-200">What would make this app a daily-driver for you? <span class="text-steel-500 font-normal">(optional)</span></span>
+            <textarea
+              name="note"
+              rows="3"
+              maxlength="1000"
+              placeholder="The first feature that would change a real workday for you."
+              class="w-full rounded-md border border-steel-700 bg-steel-900/80 px-4 py-3 text-steel-100 placeholder:text-steel-500 focus:outline-none focus:ring-2 focus:ring-volt-500/60 focus:border-volt-500/60"
+            ></textarea>
+          </label>
+
+          <button type="submit" class="btn-primary mt-2">Join the waitlist</button>
+          <p class="text-xs text-steel-500">By submitting you agree to BCL contacting you about the app launch. No spam, unsubscribe anytime.</p>
+        </form>
+      </div>
+
+      <aside class="card">
+        <p class="eyebrow">What's coming</p>
+        <h3 class="mt-3 text-xl font-bold">First-look features</h3>
+        <ul class="mt-4 space-y-3 text-steel-300">
+          <li class="flex gap-3">
+            <span class="mt-1 inline-block h-2 w-2 flex-none rounded-sm bg-volt-500"></span>
+            <span><strong class="text-steel-100">Trade-aware chat.</strong> Ask in your language — code references, parts, measurements, prep — get answers that aren't dumbed down.</span>
+          </li>
+          <li class="flex gap-3">
+            <span class="mt-1 inline-block h-2 w-2 flex-none rounded-sm bg-volt-500"></span>
+            <span><strong class="text-steel-100">Photo-first.</strong> Snap a panel, a recipe, a hairline, a fender. Get a useful read.</span>
+          </li>
+          <li class="flex gap-3">
+            <span class="mt-1 inline-block h-2 w-2 flex-none rounded-sm bg-volt-500"></span>
+            <span><strong class="text-steel-100">Voice-first.</strong> Dictate notes hands-free on the truck or in the booth.</span>
+          </li>
+          <li class="flex gap-3">
+            <span class="mt-1 inline-block h-2 w-2 flex-none rounded-sm bg-volt-500"></span>
+            <span><strong class="text-steel-100">Safety + code calls.</strong> When credentialed work or compliance is in play, the app says so plainly.</span>
+          </li>
+        </ul>
+
+        <div class="mt-6 rounded-lg border border-volt-500/30 bg-volt-500/5 p-4">
+          <p class="text-sm font-semibold text-volt-500">Want more than a waitlist?</p>
+          <p class="mt-2 text-sm text-steel-300">The <a href="/cohort-2026" class="text-volt-500 underline-offset-4 hover:underline">Founding-25 cohort</a> ships now — paid, lifetime grandfathered pricing, full apprentice-track program.</p>
+        </div>
+      </aside>
+    </div>
+  </section>
+</Layout>
