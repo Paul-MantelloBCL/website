@@ -1,0 +1,103 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { weeks, totalEntries, weekCount, pillarColors } from '../data/changelog';
+---
+<Layout
+  title="Changelog — Blue Collar Labs"
+  description="Public weekly progress log for Blue Collar Labs. What shipped, which pillar it serves, and where to find it — updated on every deploy."
+  ogImage="/og/changelog.png"
+>
+  <section class="container-wide pt-20 pb-8">
+    <p class="eyebrow">Changelog · audited in public</p>
+    <h1 class="mt-3 text-4xl md:text-5xl font-extrabold">
+      What shipped, week by week.<br>
+      <span class="text-volt-500">A 501(c)(3) building in the open.</span>
+    </h1>
+    <p class="mt-6 max-w-2xl text-lg text-steel-300">
+      Cohort prospects, donors, and grant reviewers can see momentum in one
+      place — without scrolling commits or guessing from a mission statement.
+      Each entry names the pillar (Build · Teach · Defend · Infrastructure)
+      and links to whatever shipped, when that thing is public-facing.
+    </p>
+  </section>
+
+  <section class="container-wide py-8">
+    <div class="card">
+      <div class="flex flex-wrap items-baseline justify-between gap-3">
+        <div>
+          <p class="eyebrow">Track record</p>
+          <p class="mt-2 text-3xl font-extrabold text-steel-100">
+            <span class="text-volt-500">{totalEntries}</span>
+            <span class="text-base font-medium text-steel-300">
+              shipments across {weekCount} {weekCount === 1 ? 'week' : 'weeks'}
+            </span>
+          </p>
+        </div>
+        <p class="text-xs text-steel-400">
+          New entries land here on every deploy. Source of truth:
+          <code class="font-mono text-steel-300">src/data/changelog.ts</code>.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="container-wide py-4 pb-20">
+    <ol class="space-y-10">
+      {weeks.map((w) => (
+        <li>
+          <div class="flex items-baseline justify-between gap-3 border-b border-steel-700/60 pb-3">
+            <h2 class="text-xl font-bold text-steel-100">{w.label}</h2>
+            <time
+              class="text-xs font-mono text-steel-400"
+              datetime={w.iso}
+            >
+              {w.iso}
+            </time>
+          </div>
+          <ul class="mt-5 grid gap-4 md:grid-cols-2">
+            {w.entries.map((e) => (
+              <li class="card">
+                <p class={`eyebrow ${pillarColors[e.pillar]}`}>{e.pillar}</p>
+                <h3 class="mt-3 text-lg font-bold">
+                  {e.href ? (
+                    <a href={e.href} class="hover:text-volt-500">
+                      {e.title}
+                    </a>
+                  ) : (
+                    e.title
+                  )}
+                </h3>
+                <p class="mt-2 text-sm text-steel-300">{e.summary}</p>
+                {e.href && (
+                  <p class="mt-3 text-xs text-volt-500">
+                    <a href={e.href} class="underline-offset-4 hover:underline">
+                      {e.href} →
+                    </a>
+                  </p>
+                )}
+              </li>
+            ))}
+          </ul>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <section class="container-wide py-12 pb-20">
+    <div class="rounded-2xl border border-steel-700/60 bg-steel-800/40 p-8 md:p-10">
+      <p class="eyebrow">Why publish this</p>
+      <h2 class="mt-3 text-2xl font-bold">A 12-week track record beats a polished mission statement.</h2>
+      <p class="mt-4 max-w-3xl text-steel-300">
+        Trades workers have heard the AI pitch before. So have donors and grant
+        reviewers. The way to earn trust isn't a longer about page — it's a
+        public record of what landed and when. Same posture as
+        <a href="/trust" class="text-volt-500 underline-offset-4 hover:underline">/trust</a>
+        (DNS + governance posture): show the work.
+      </p>
+      <div class="mt-5 flex flex-wrap items-center gap-3">
+        <a href="/about" class="btn-secondary">Year-1 targets</a>
+        <a href="/donate" class="btn-primary">Fund the next week →</a>
+      </div>
+    </div>
+  </section>
+</Layout>
