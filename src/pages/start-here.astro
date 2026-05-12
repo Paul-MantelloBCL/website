@@ -1,0 +1,115 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+interface Cta {
+  href: string;
+  label: string;
+  primary?: boolean;
+}
+interface ArchetypePath {
+  eyebrow: string;
+  title: string;
+  body: string;
+  cta: Cta[];
+}
+
+// Four front doors. Each archetype lands on the two or three pages that close
+// the loop for them — cohort + free prompts for apprentices, audit + Defense
+// Pack for shop owners, trust + policies + about for press, donate + audits +
+// about for donors. Keep CTAs short so the visitor can pick fast.
+const paths: ArchetypePath[] = [
+  {
+    eyebrow: 'Apprentice · journeyman',
+    title: "I'm a tradesperson and I want to use AI at work.",
+    body: 'Start with the Founding-25 cohort or the free prompt library. The cohort is four weeks, taught by working tradespeople, founding-class pricing — apprentice scholarships available. The prompts are copy-paste shortcuts you can run on tomorrow\'s job.',
+    cta: [
+      { href: '/cohort-2026', label: 'See the cohort →', primary: true },
+      { href: '/prompts', label: 'Browse free prompts' },
+    ],
+  },
+  {
+    eyebrow: 'Shop owner · GC',
+    title: "I run a shop and I'm worried about getting hit.",
+    body: 'Get a free phishing audit — the first ten are free for working trade shops in Year 1, anonymized, owner controls the narrative. Pair it with the Defense Pack: three real teardowns plus a 60-minute incident plan you can run at 11 PM if something is happening tonight.',
+    cta: [
+      { href: '/audit-request', label: 'Request the audit →', primary: true },
+      { href: '/defense-pack', label: 'Grab the Defense Pack' },
+    ],
+  },
+  {
+    eyebrow: 'Press · researcher · grant reviewer',
+    title: 'I cover labor, AI, workforce policy, or grant funding.',
+    body: 'The trust page carries our public DNS posture and self-audit scorecard. Policies + EIN 42-1853577 sit in the footer site-wide; the about page lists founder, mission, and Year-1 commitments. Quotes and source contact run through the contact page.',
+    cta: [
+      { href: '/trust', label: 'Trust scorecard →', primary: true },
+      { href: '/policies', label: 'Policies' },
+      { href: '/about', label: 'About' },
+    ],
+  },
+  {
+    eyebrow: 'Donor · funder',
+    title: 'I want to fund this work.',
+    body: 'Donations are tax-deductible — IRS-approved 501(c)(3), EIN 42-1853577. The audits page shows live Year-1 progress on the ten-shop DEFEND goal; the about page lists all four Year-1 targets. Donor reporting follows the same audited-in-public posture as the rest of the site.',
+    cta: [
+      { href: '/donate', label: 'Donate →', primary: true },
+      { href: '/audits', label: 'See audit progress' },
+      { href: '/about', label: 'Year-1 targets' },
+    ],
+  },
+];
+---
+<Layout
+  title="Start here — Blue Collar Labs"
+  description="Four front doors into Blue Collar Labs: apprentice, shop owner, press, or donor. Tell us who you are and we'll take you to the right page in one click."
+  ogImage="/og/start-here.png"
+>
+  <section class="container-wide pt-20 pb-8">
+    <p class="eyebrow">Start here</p>
+    <h1 class="mt-3 text-4xl md:text-5xl font-extrabold">
+      Tell us who you are.<br>
+      <span class="text-volt-500">We'll take it from there.</span>
+    </h1>
+    <p class="mt-6 max-w-2xl text-lg text-steel-300">
+      Blue Collar Labs is a 501(c)(3) building AI tools <em>for</em> tradesmen,
+      teaching tradesmen <em>with</em> AI, and defending tradesmen <em>from</em> AI.
+      Pick the path that fits — each one lands you two or three clicks deep
+      into the page that actually answers your question.
+    </p>
+  </section>
+
+  <section class="container-wide py-8">
+    <div class="grid gap-6 md:grid-cols-2">
+      {paths.map((p) => (
+        <div class="card">
+          <p class="eyebrow">{p.eyebrow}</p>
+          <h2 class="mt-3 text-xl font-bold">{p.title}</h2>
+          <p class="mt-3 text-steel-300">{p.body}</p>
+          <div class="mt-5 flex flex-wrap items-center gap-3">
+            {p.cta.map((c) => (
+              <a href={c.href} class={c.primary ? 'btn-primary' : 'btn-secondary'}>
+                {c.label}
+              </a>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="container-wide py-12 pb-20">
+    <div class="rounded-2xl border border-steel-700/60 bg-steel-800/40 p-8 md:p-10">
+      <p class="eyebrow">Not sure which one fits?</p>
+      <h2 class="mt-3 text-2xl font-bold">Two-sentence orient.</h2>
+      <p class="mt-4 max-w-3xl text-steel-300">
+        We <strong class="text-white">build</strong> AI tools for working tradespeople — truck inventory, jobsite assistants, prompt packs.
+        We <strong class="text-white">teach</strong> apprentices and journeymen how to use AI through a four-week cohort and a free prompt library.
+        We <strong class="text-white">defend</strong> small shops from phishing and ransomware with free audits and a 60-minute incident plan.
+      </p>
+      <div class="mt-5 flex flex-wrap items-center gap-3">
+        <a href="/about" class="btn-secondary">Read the mission</a>
+        <a href="/programs" class="btn-secondary">See all programs</a>
+        <a href="/contact" class="btn-secondary">Contact us</a>
+      </div>
+    </div>
+  </section>
+</Layout>
