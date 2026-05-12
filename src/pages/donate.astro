@@ -1,12 +1,24 @@
 ---
 import Layout from '../layouts/Layout.astro';
 
+// Suggested-amount tiles. Each amount maps to one concrete impact line so the
+// donor knows exactly what their dollars unlock — same audit-request playbook,
+// donor-funnel edition.
 const tiers = [
-  { amount: 25, blurb: 'Powers a workshop seat for one tradesperson' },
-  { amount: 100, blurb: 'Funds a security audit hour for a small shop' },
-  { amount: 500, blurb: 'Sponsors a contractor in the AI-Ready Tradesman cert' },
-  { amount: 2500, blurb: 'Subsidizes a full pilot deployment for one shop' },
+  { amount: 25, blurb: 'Funds one apprentice\'s seat in a Founding-25 cohort week.' },
+  { amount: 100, blurb: 'Funds one shop\'s free phishing audit — including the anonymized case-study debrief.' },
+  { amount: 500, blurb: 'Funds the full audit + published case-study debrief for one small trade shop.' },
+  { amount: 2500, blurb: 'Subsidizes a full pilot deployment of a BUILD tool to one shop.' },
 ];
+
+// Year-1 dollars breakdown. Source: about-page Year-1 plan + the funding tiers
+// below. Ratios reflect the spirit of 501(c)(3) disclosure: most dollars hit
+// program work, ops stays lean.
+const year1Mix = [
+  { label: 'Programs (BUILD · TEACH · DEFEND)', pct: 83, body: '$250k of every $300k catalytic round goes directly to the three pillars — engineering, instruction, and audit work.' },
+  { label: 'Operations (ops · compliance · governance)', pct: 17, body: '$50k pilot block covers compliance, governance, and the lean staffing it takes to keep a new 501(c)(3) audit-ready.' },
+];
+
 const pillars = [
   { name: 'Pilot', amount: '$50k', alloc: 'Ops', body: "Funds operations, compliance, and early staff for one quarter. Gets the nonprofit out of the founder's pocket and onto firm ground." },
   { name: 'Build', amount: '$75k', alloc: 'BUILD', body: 'Engineering + deployment of the Truck Inventory and AI Estimator tools to the first 50 pilot contractors.' },
@@ -14,7 +26,11 @@ const pillars = [
   { name: 'Defend', amount: '$75k', alloc: 'DEFEND', body: "Audit tooling, certs, and free-tier subsidy for shops that can't afford a proper security review." },
 ];
 ---
-<Layout title="Donate — Blue Collar Labs">
+<Layout
+  title="Donate — Blue Collar Labs"
+  description="Fund a pillar — Build, Teach, or Defend. 501(c)(3) tax-deductible, EIN 42-1853577. Every dollar tracked against measurable outcomes."
+  ogImage="/og/donate.png"
+>
   <section class="container-wide pt-20 pb-12">
     <p class="eyebrow">Donate</p>
     <h1 class="mt-3 text-4xl md:text-5xl font-extrabold">
@@ -29,11 +45,41 @@ const pillars = [
     </div>
   </section>
 
+  <section class="container-wide py-4">
+    <details class="group rounded-2xl border border-steel-700/60 bg-steel-800/40 p-6 md:p-8">
+      <summary class="cursor-pointer list-none flex items-center justify-between gap-3">
+        <div>
+          <p class="eyebrow">Trust · is this legit?</p>
+          <h2 class="mt-2 text-xl font-bold">IRS-approved 501(c)(3), EIN <span class="font-mono text-volt-500">42-1853577</span>. Audited in public.</h2>
+        </div>
+        <span aria-hidden="true" class="text-volt-500 transition-transform group-open:rotate-45">+</span>
+      </summary>
+      <div class="mt-5 grid gap-4 text-sm text-steel-300 md:grid-cols-2">
+        <div>
+          <p class="text-xs uppercase tracking-wider text-volt-500">Tax-deductible</p>
+          <p class="mt-2">501(c)(3) public-charity determination from the IRS, approved April 2026. Every gift — one-time or recurring — is fully tax-deductible in the United States. Receipts issued automatically through Donorbox.</p>
+        </div>
+        <div>
+          <p class="text-xs uppercase tracking-wider text-volt-500">Federal EIN</p>
+          <p class="mt-2"><span class="font-mono text-steel-100">42-1853577</span>. Searchable on the IRS Tax Exempt Organization Search. Verify before you give — same EIN appears in our footer site-wide and on every receipt.</p>
+        </div>
+        <div>
+          <p class="text-xs uppercase tracking-wider text-volt-500">Audited in public</p>
+          <p class="mt-2">DNS posture, governance, and self-audit scorecard live at <a href="/trust" class="text-volt-500 underline-offset-4 hover:underline">/trust</a>. Same five-control rubric we run on the shops we audit gets run on us first.</p>
+        </div>
+        <div>
+          <p class="text-xs uppercase tracking-wider text-volt-500">Refunds + governance</p>
+          <p class="mt-2">Donation refunds honored within 30 days, no questions. Governance practices documented under <a href="/privacy" class="text-volt-500 underline-offset-4 hover:underline">/privacy</a>. Questions on either — <a href="/contact" class="text-volt-500 underline-offset-4 hover:underline">contact us</a> before you give.</p>
+        </div>
+      </div>
+    </details>
+  </section>
+
   <section class="container-wide py-8">
     <div class="rounded-2xl border border-steel-700/60 bg-steel-800/40 p-8 md:p-10">
       <p class="eyebrow">Quick give</p>
       <h2 class="mt-3 text-2xl font-bold">Pick an amount, pick an outcome.</h2>
-      <p class="mt-3 text-steel-300 max-w-2xl">Every gift is tracked to a specific outcome. Click an amount to open the donation page pre-filled.</p>
+      <p class="mt-3 text-steel-300 max-w-2xl">Every tile maps to one concrete impact line. Click an amount to open the donation page pre-filled — tax-deductible receipt issued automatically.</p>
       <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {tiers.map((t) => (
           <a href={`https://donorbox.org/bluecollar-labs?amount=${t.amount}`} target="_blank" rel="noopener" class="group rounded-xl border border-steel-700/60 bg-steel-900/40 p-5 transition hover:border-volt-500/60 hover:bg-steel-900/70">
@@ -41,6 +87,28 @@ const pillars = [
             <p class="mt-3 text-sm text-steel-300">{t.blurb}</p>
             <p class="mt-4 text-xs font-semibold uppercase tracking-wider text-steel-400 group-hover:text-volt-500">Give →</p>
           </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="container-wide py-8">
+    <div class="rounded-2xl border border-steel-700/60 bg-steel-800/40 p-8 md:p-10">
+      <p class="eyebrow">Where Year-1 dollars go</p>
+      <h2 class="mt-3 text-2xl font-bold">Most of every dollar lands on program work.</h2>
+      <p class="mt-3 text-steel-300 max-w-2xl">Required disclosure for a 501(c)(3) — and how we think about it ourselves. Ratios assume the full $300k catalytic round; smaller gifts roll into the same mix proportionally.</p>
+      <div class="mt-6 space-y-5">
+        {year1Mix.map((m) => (
+          <div>
+            <div class="flex items-baseline justify-between gap-3">
+              <p class="text-sm font-semibold text-steel-100">{m.label}</p>
+              <p class="text-sm font-mono text-volt-500">{m.pct}%</p>
+            </div>
+            <div class="mt-2 h-2 w-full overflow-hidden rounded-full bg-steel-700/60">
+              <div class="h-full bg-volt-500 transition-all duration-500" style={`width: ${m.pct}%`}></div>
+            </div>
+            <p class="mt-2 text-xs text-steel-400">{m.body}</p>
+          </div>
         ))}
       </div>
     </div>
