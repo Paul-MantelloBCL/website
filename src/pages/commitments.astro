@@ -1,0 +1,91 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { commitments, percent } from '../data/commitments';
+---
+<Layout
+  title="Commitments — Blue Collar Labs"
+  description="Live progress meters for all four Year-1 commitments at Blue Collar Labs. Public, audited, updated on every deploy."
+  ogImage="/og/commitments.png"
+>
+  <section class="container-wide pt-20 pb-8">
+    <p class="eyebrow">Commitments · Year 1</p>
+    <h1 class="mt-3 text-4xl md:text-5xl font-extrabold">
+      Four numbers.<br>
+      <span class="text-volt-500">One public scoreboard.</span>
+    </h1>
+    <p class="mt-6 max-w-2xl text-lg text-steel-300">
+      Grant reviewers and donors shouldn't have to parse the about page to
+      figure out whether a 501(c)(3) is actually doing what it said it would
+      do. These are the four targets we committed to for Year 1 — counters
+      update on every deploy. Zero is zero until reality says otherwise.
+    </p>
+  </section>
+
+  <section class="container-wide py-8">
+    <div class="grid gap-6 md:grid-cols-2">
+      {commitments.map((c) => {
+        const pct = percent(c);
+        const reached = c.current >= c.target;
+        return (
+          <div class="card">
+            <p class="eyebrow">{c.pillar}</p>
+            <h2 class="mt-3 text-xl font-bold">{c.title}</h2>
+            <p class="mt-3 text-steel-300 text-sm">{c.summary}</p>
+            <div class="mt-5 flex flex-wrap items-baseline justify-between gap-3">
+              <p class="text-3xl font-extrabold text-steel-100">
+                <span class={reached ? 'text-volt-500' : 'text-volt-500'}>{c.current}</span>
+                <span class="text-base font-medium text-steel-300"> of {c.target} {c.unit}</span>
+              </p>
+              <p class="text-xs font-mono text-steel-400">{pct}%</p>
+            </div>
+            <div class="mt-3 h-2 w-full overflow-hidden rounded-full bg-steel-700/60">
+              <div
+                class="h-full bg-volt-500 transition-all duration-500"
+                style={`width: ${pct}%`}
+              ></div>
+            </div>
+            {c.note && (
+              <p class="mt-4 text-xs text-steel-400">{c.note}</p>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  </section>
+
+  <section class="container-wide py-8">
+    <div class="grid gap-6 md:grid-cols-2">
+      <div class="card">
+        <p class="eyebrow">What counts as progress</p>
+        <ul class="mt-3 space-y-2 text-sm text-steel-300">
+          <li>• Contractors using BUILD tools count when the tool is in use on a real job, not a trial.</li>
+          <li>• Certifications count when the cohort is finished and the cert is verifiable at <a href="/about" class="text-volt-500 underline-offset-4 hover:underline">/about</a> → /verify.</li>
+          <li>• Audits count when the anonymized case study is approved by the owner and published.</li>
+          <li>• The funding-cycle milestone closes when both an earned-revenue line and a grant-reporting cycle are on file.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <p class="eyebrow">Why publish zeros</p>
+        <p class="mt-3 text-sm text-steel-300">
+          Most nonprofits launch with aspirational numbers and update them
+          quietly when reality doesn't match. We do the opposite: start at
+          zero, climb in public, and never round up. If you fund this work,
+          the meter only moves when something real happened.
+        </p>
+        <a href="/donate" class="btn-primary mt-5">Fund Year 1 →</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="container-wide py-12 pb-20">
+    <p class="text-xs text-steel-400">
+      Year-1 commitments are documented in plain language on
+      <a href="/about" class="text-volt-500 underline-offset-4 hover:underline">/about</a>.
+      Public posture documented on
+      <a href="/trust" class="text-volt-500 underline-offset-4 hover:underline">/trust</a>.
+      Source of truth for these counters is
+      <code class="font-mono text-steel-300">src/data/commitments.ts</code> —
+      one file, one place to update.
+    </p>
+  </section>
+</Layout>
