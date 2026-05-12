@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#0b0f17"/>
+  <!-- top accent bar -->
+  <rect x="0" y="0" width="1200" height="10" fill="#ff9800"/>
+  <!-- eyebrow -->
+  <text x="80" y="120" font-size="24" font-weight="800" fill="#ff9800"
+        font-family="Inter, system-ui, sans-serif"
+        letter-spacing="5">FAQ</text>
+  <!-- brand mark -->
+  <text x="1120" y="120" font-size="20" font-weight="700" fill="#9ca3af"
+        text-anchor="end"
+        font-family="Inter, system-ui, sans-serif"
+        letter-spacing="2">BLUE COLLAR LABS</text>
+  <text x="80" y="220" font-size="68" font-weight="900" fill="#ffffff" font-family="Inter, system-ui, sans-serif">Every question, one page.</text>
+  <text x="80" y="330" font-size="28" font-weight="500" fill="#9ca3af" font-family="Inter, system-ui, sans-serif">The dozen questions every apprentice, owner, donor, and</text><text x="80" y="368" font-size="28" font-weight="500" fill="#9ca3af" font-family="Inter, system-ui, sans-serif">press contact lands here with — answered in plain English.</text>
+  <!-- bottom rule -->
+  <rect x="80" y="540" width="120" height="6" fill="#ff9800"/>
+  <!-- footer URL -->
+  <text x="80" y="590" font-size="22" font-weight="700" fill="#ffffff"
+        font-family="Inter, system-ui, sans-serif">bluecollarlabs.org/faq</text>
+</svg>
