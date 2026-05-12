@@ -1,0 +1,161 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+// One page, every pre-funnel question. Grouped so each archetype (apprentice,
+// shop owner, donor, press) can find their answer in one scroll without us
+// needing four separate FAQ pages. JSON-LD FAQPage below makes the Q&A
+// crawlable so Google can surface them directly in search results.
+const groups = [
+  {
+    label: 'About Blue Collar Labs',
+    qa: [
+      {
+        q: 'What does Blue Collar Labs actually do?',
+        a: 'Three pillars: BUILD ships AI tools for tradespeople (truck inventory, AI estimator). TEACH runs an applied-AI certificate for working tradespeople. DEFEND audits small trade shops for phishing and basic cybersecurity — free for shops that need it most.',
+      },
+      {
+        q: 'Are you really a 501(c)(3)?',
+        a: 'Yes. IRS determination approved April 2026. Federal EIN 42-1853577 — searchable on the IRS Tax Exempt Organization Search. Every donation is fully tax-deductible in the United States.',
+      },
+      {
+        q: 'Is this only for construction trades?',
+        a: 'No. The audience includes electricians, plumbers, HVAC techs, GCs, roofers, mechanics, landscapers, carpenters, chefs, cosmetologists, and every other skilled worker whose job is being changed by AI. The marketing leads with construction because the founder is an electrician — but the tools and curriculum cross trades.',
+      },
+      {
+        q: 'Who founded it and why?',
+        a: 'Founded by Paul Mantello, a working electrician who watched AI go from novelty to job-shaping force in two years. Most AI products are written by software engineers for software engineers; almost nothing is built for the people swinging hammers, soldering joints, or running shops with eight employees. BCL exists to close that gap.',
+      },
+    ],
+  },
+  {
+    label: 'For apprentices and tradespeople',
+    qa: [
+      {
+        q: 'How do I get certified?',
+        a: 'Enroll in the AI-Ready Tradesman cohort on /school. Founding-25 cohorts run small (25 seats), live, and finish with a verifiable certificate. The first cohort is forming now — see /school for dates and seats.',
+      },
+      {
+        q: 'Is it actually free?',
+        a: 'The Founding-25 cohort is the paid program that funds the rest of the work. Free public resources include the /prompts library (10 prompts every tradesperson should have saved), DEFEND audit eligibility for shops that qualify, and most blog + curriculum drops. We do not market the school as free.',
+      },
+      {
+        q: 'Do I need to be technical to take the course?',
+        a: 'No. If you can text and use the camera app on your phone, you already have every skill you need. The cohort assumes zero prior AI experience and zero coding background.',
+      },
+    ],
+  },
+  {
+    label: 'For shop owners',
+    qa: [
+      {
+        q: 'What is the DEFEND audit?',
+        a: 'A small-shop cybersecurity review focused on the threats actually hitting trade businesses — phishing, vendor invoice fraud, voice-clone scams, social engineering. We run the same five-control rubric on every shop. Findings come back with a plain-English remediation plan, not a PDF report nobody reads.',
+      },
+      {
+        q: 'How much does it cost?',
+        a: 'Free for the first ten Founding-shop slots. Beyond that, sliding-scale based on shop size; details on the audit-request page. Cost should never be the reason a shop stays vulnerable.',
+      },
+      {
+        q: 'Can I expense the cohort for my apprentices?',
+        a: 'Yes. We publish a template email + ROI talking points apprentices can hand to their employer. Most shops we talk to find it expensible under safety training or professional development.',
+      },
+    ],
+  },
+  {
+    label: 'For donors and grant officers',
+    qa: [
+      {
+        q: 'How is my donation used?',
+        a: 'Most dollars hit program work. Roughly 83% of every $300k catalytic round funds BUILD, TEACH, and DEFEND directly. The remaining 17% covers operations, compliance, and lean staffing for an audit-ready 501(c)(3). Full breakdown on /donate.',
+      },
+      {
+        q: 'How do you measure impact?',
+        a: 'Year-1 targets: 50 contractors using BUILD tools, 100 tradespeople certified, 10 shops hardened via DEFEND audits, and one full earned-revenue-plus-grant cycle complete. Public progress on /commitments and weekly shipped work on /changelog.',
+      },
+      {
+        q: 'Where do I see governance and trust signals?',
+        a: 'Everything live at /trust — DNS posture, self-audit scorecard, governance practices. We run the same five-control rubric on ourselves that we run on the shops we audit.',
+      },
+    ],
+  },
+  {
+    label: 'For press and partnerships',
+    qa: [
+      {
+        q: 'How do I reach the founder?',
+        a: 'Send a note through /contact. We respond to press queries within 24 business hours. The site footer EIN is the fastest way to verify the org before reaching out.',
+      },
+      {
+        q: 'Can I get logos and a boilerplate?',
+        a: 'Use /contact and ask for the press kit. We are happy to share logos, headshots, founder bio, and an embeddable mission paragraph for press use.',
+      },
+    ],
+  },
+];
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: groups.flatMap((g) =>
+    g.qa.map((item) => ({
+      '@type': 'Question',
+      name: item.q,
+      acceptedAnswer: { '@type': 'Answer', text: item.a },
+    })),
+  ),
+};
+---
+<Layout
+  title="FAQ — Blue Collar Labs"
+  description="The questions every apprentice, shop owner, donor, and press contact lands on Blue Collar Labs with — answered in one page. 501(c)(3), EIN 42-1853577."
+  ogImage="/og/faq.png"
+  schema={faqSchema}
+>
+  <section class="container-wide pt-20 pb-12">
+    <p class="eyebrow">FAQ</p>
+    <h1 class="mt-3 text-4xl md:text-5xl font-extrabold">
+      Every question,<br /><span class="text-volt-500">one page.</span>
+    </h1>
+    <p class="mt-6 max-w-2xl text-lg text-steel-300">
+      The dozen questions every visitor lands here with — answered in plain English. Skip to the section that matches you.
+    </p>
+    <nav class="mt-8 flex flex-wrap gap-2 text-sm">
+      {groups.map((g) => (
+        <a href={`#${g.label.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}`} class="rounded-full border border-steel-700/60 bg-steel-800/40 px-4 py-2 text-steel-200 transition hover:border-volt-500/60 hover:text-volt-500">
+          {g.label}
+        </a>
+      ))}
+    </nav>
+  </section>
+
+  {groups.map((g) => (
+    <section class="container-wide py-8" id={g.label.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}>
+      <p class="eyebrow">{g.label}</p>
+      <div class="mt-4 space-y-3">
+        {g.qa.map((item) => (
+          <details class="group rounded-2xl border border-steel-700/60 bg-steel-800/40 p-5 md:p-6">
+            <summary class="cursor-pointer list-none flex items-start justify-between gap-3">
+              <h2 class="text-lg font-bold text-white">{item.q}</h2>
+              <span aria-hidden="true" class="mt-1 shrink-0 text-volt-500 transition-transform group-open:rotate-45">+</span>
+            </summary>
+            <p class="mt-4 text-steel-300">{item.a}</p>
+          </details>
+        ))}
+      </div>
+    </section>
+  ))}
+
+  <section class="container-wide py-12">
+    <div class="rounded-2xl border border-volt-500/30 bg-gradient-to-br from-volt-500/10 to-transparent p-8 md:p-10">
+      <p class="eyebrow">Didn't find your answer?</p>
+      <h2 class="mt-3 text-2xl font-bold">Ask us directly.</h2>
+      <p class="mt-3 text-steel-300 max-w-2xl">
+        If your question isn't here, send a note through /contact. We answer every legitimate inbound — apprentice, shop owner, donor, or press.
+      </p>
+      <div class="mt-6 flex flex-wrap gap-3">
+        <a href="/contact" class="btn-primary">Contact us</a>
+        <a href="/about" class="btn-secondary">About BCL</a>
+      </div>
+    </div>
+  </section>
+</Layout>
