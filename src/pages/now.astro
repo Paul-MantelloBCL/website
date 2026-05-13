@@ -1,0 +1,72 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { focusNow, onPause, nextUp, lastUpdated, headline } from '../data/now';
+
+// /now convention: Derek Sivers, nownownow.com — single page that answers
+// "what are you focused on right now?". Public broadcast surface for funders,
+// press, and partners doing pre-call diligence.
+const formattedDate = new Date(lastUpdated + 'T00:00:00Z').toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+  timeZone: 'UTC',
+});
+
+const sections = [
+  { id: 'now', label: 'Right now', items: focusNow, tone: 'active' },
+  { id: 'pause', label: 'On pause', items: onPause, tone: 'muted' },
+  { id: 'next', label: 'Next up', items: nextUp, tone: 'future' },
+];
+
+const pillarColor: Record<string, string> = {
+  Build: 'text-volt-500',
+  Teach: 'text-volt-500',
+  Defend: 'text-volt-500',
+  Infrastructure: 'text-steel-200',
+};
+---
+<Layout
+  title="Now — Blue Collar Labs"
+  description="What Blue Collar Labs is focused on right now, what is on pause, and what is next. Single broadcast surface for funders, press, and partners. Updated weekly."
+  ogImage="/og/now.png"
+>
+  <section class="container-wide pt-20 pb-12">
+    <p class="eyebrow">Now</p>
+    <h1 class="mt-3 text-4xl md:text-5xl font-extrabold">
+      What we're focused on<br /><span class="text-volt-500">right now.</span>
+    </h1>
+    <p class="mt-6 max-w-2xl text-lg text-steel-300">{headline}</p>
+    <p class="mt-4 text-sm text-steel-400">
+      Last updated: <span class="font-mono text-steel-200">{formattedDate}</span> · A <a href="https://nownownow.com" target="_blank" rel="noopener" class="text-volt-500 underline-offset-4 hover:underline">/now page</a>, in the public-broadcast tradition.
+    </p>
+  </section>
+
+  {sections.map((s) => (
+    <section class="container-wide py-8" id={s.id}>
+      <p class={`eyebrow ${s.tone === 'muted' ? 'opacity-70' : ''}`}>{s.label}</p>
+      <div class="mt-4 grid gap-4 md:grid-cols-3">
+        {s.items.map((item) => (
+          <div class={`rounded-2xl border p-6 ${s.tone === 'active' ? 'border-volt-500/30 bg-gradient-to-br from-volt-500/5 to-transparent' : 'border-steel-700/60 bg-steel-800/40'}`}>
+            <p class={`text-xs uppercase tracking-[0.2em] ${pillarColor[item.pillar] ?? 'text-steel-200'}`}>{item.pillar}</p>
+            <h2 class="mt-3 text-lg font-bold text-white">{item.title}</h2>
+            <p class="mt-3 text-sm text-steel-300">{item.body}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  ))}
+
+  <section class="container-wide py-12">
+    <div class="rounded-2xl border border-steel-700/60 bg-steel-800/40 p-8 md:p-10">
+      <p class="eyebrow">How this page works</p>
+      <h2 class="mt-3 text-2xl font-bold">One file. One commit. One source of truth.</h2>
+      <p class="mt-3 max-w-2xl text-steel-300">
+        Updates happen in <code class="rounded bg-steel-900/60 px-2 py-0.5 font-mono text-xs text-steel-200">src/data/now.ts</code> — one commit a week. /changelog tracks what shipped; this page tracks what's in motion. If you need timeline detail, that's the right next stop.
+      </p>
+      <div class="mt-6 flex flex-wrap gap-3">
+        <a href="/contact" class="btn-primary">Talk to the founder</a>
+        <a href="/donate" class="btn-secondary">Fund the work</a>
+      </div>
+    </div>
+  </section>
+</Layout>
