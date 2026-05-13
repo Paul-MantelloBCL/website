@@ -1,22 +1,55 @@
 ---
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import SchemaJsonLd from '../components/SchemaJsonLd.astro';
 import '../styles/global.css';
+
+type SchemaObject = Record<string, unknown>;
 
 interface Props {
   title?: string;
   description?: string;
   ogImage?: string;
+  schema?: SchemaObject | SchemaObject[];
 }
 
 const {
   title = 'Blue Collar Labs — AI for the Trades',
   description = 'A nonprofit building AI tools for tradesmen, teaching tradesmen with AI, and defending tradesmen from AI. Founded by working electricians.',
   ogImage = '/og-image.png',
+  schema,
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site).toString();
 const ogImageUrl = new URL(ogImage, Astro.site).toString();
+
+// Sitewide entity. Emitted on every page so crawlers + LLMs always have a
+// canonical NonprofitOrganization record to attach to the domain. EIN matches
+// the federal record on file (memory: reference_bcl_ein).
+const orgSchema: SchemaObject = {
+  '@context': 'https://schema.org',
+  '@type': 'NonprofitOrganization',
+  '@id': 'https://bluecollarlabs.org/#org',
+  name: 'Blue Collar Labs Academy',
+  alternateName: 'Blue Collar Labs',
+  url: 'https://bluecollarlabs.org/',
+  logo: 'https://bluecollarlabs.org/og-image.png',
+  description: 'A nonprofit building AI tools for tradesmen, teaching tradesmen with AI, and defending tradesmen from AI. Founded by working electricians.',
+  taxID: '42-1853577',
+  founder: { '@type': 'Person', name: 'Paul Mantello' },
+  areaServed: { '@type': 'Country', name: 'United States' },
+  sameAs: [
+    'https://www.instagram.com/bluecollarlabs',
+    'https://www.tiktok.com/@bluecollarlabs',
+  ],
+};
+
+const extraSchemas: SchemaObject[] = schema
+  ? Array.isArray(schema)
+    ? schema
+    : [schema]
+  : [];
+const allSchemas: SchemaObject[] = [orgSchema, ...extraSchemas];
 ---
 <!DOCTYPE html>
 <html lang="en" class="bg-steel-900">
@@ -43,6 +76,7 @@ const ogImageUrl = new URL(ogImage, Astro.site).toString();
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageUrl} />
+    <SchemaJsonLd data={allSchemas} />
   </head>
   <body class="min-h-screen flex flex-col">
     <Header />

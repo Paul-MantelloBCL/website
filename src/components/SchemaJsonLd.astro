@@ -1,0 +1,21 @@
+---
+// Emits a <script type="application/ld+json"> tag for one or more schema.org
+// objects. Pass a single object or an array. Each object is JSON-encoded with
+// HTML-unsafe chars escaped (</ → <\/) so a stray closing tag inside string
+// content can't break out of the script.
+type SchemaObject = Record<string, unknown>;
+
+interface Props {
+  data: SchemaObject | SchemaObject[];
+}
+
+const { data } = Astro.props;
+const items = Array.isArray(data) ? data : [data];
+
+function safeStringify(obj: SchemaObject): string {
+  return JSON.stringify(obj).replace(/<\/(script)/gi, "<\\/$1");
+}
+---
+{items.map((obj) => (
+  <script is:inline type="application/ld+json" set:html={safeStringify(obj)} />
+))}
