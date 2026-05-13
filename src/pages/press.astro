@@ -1,0 +1,142 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+// One page, everything a reporter needs to file by deadline. Logos, hex,
+// boilerplate paragraph, founder bio, and the verifiable trust signals
+// every editor asks for (EIN, IRS status, founding date).
+const stats = [
+  { value: '10M', label: 'Underserved tradespeople in the U.S. that BCL serves.' },
+  { value: '501(c)(3)', label: 'IRS-approved tax-exempt nonprofit. Determination: April 2026.' },
+  { value: '42-1853577', label: 'Federal EIN — searchable on the IRS Tax Exempt Organization Search.' },
+];
+
+const pillars = [
+  { name: 'BUILD', body: 'AI tools built for tradespeople — truck inventory, AI estimator, customer follow-up automation.' },
+  { name: 'TEACH', body: 'AI-Ready Tradesman certificate — small live cohorts that finish with a verifiable credential.' },
+  { name: 'DEFEND', body: 'Free cybersecurity audits for small trade shops — phishing, vendor invoice fraud, voice-clone scams.' },
+];
+
+const colors = [
+  { name: 'Volt', hex: '#ff9800', use: 'Primary accent, headlines, key data.' },
+  { name: 'Steel-900', hex: '#0b0f17', use: 'Backgrounds, navigation, dark surfaces.' },
+  { name: 'Steel-300', hex: '#9ca3af', use: 'Body text on dark backgrounds, secondary copy.' },
+  { name: 'White', hex: '#ffffff', use: 'Inline highlights, headings on dark surfaces.' },
+];
+
+const logos = [
+  { href: '/logos/logo-icon.png', label: 'Icon mark (PNG)', desc: 'Square icon, transparent background. Use as social avatar or favicon.' },
+  { href: '/logos/logo-full.png', label: 'Full lockup (PNG)', desc: 'Icon + wordmark, transparent background. Use for press articles and partner pages.' },
+  { href: '/logos/logo-horizontal.svg', label: 'Horizontal lockup (SVG)', desc: 'Scalable horizontal mark. Use for headers and wide layouts.' },
+  { href: '/logos/logo-square.svg', label: 'Square lockup (SVG)', desc: 'Scalable square mark. Use for badges and stamp-style placements.' },
+  { href: '/logos/logo-simple.svg', label: 'Simple icon (SVG)', desc: 'Minimal scalable icon. Use when space is tight or context is monochrome.' },
+];
+
+const boilerplate = `Blue Collar Labs is a 501(c)(3) nonprofit (EIN 42-1853577) founded by working electrician Paul Mantello to build AI tools for tradespeople, teach tradespeople to use AI, and defend trade shops from AI-powered scams. Three pillars — BUILD, TEACH, DEFEND — serve an audience of ten million underserved skilled workers in the United States.`;
+---
+<Layout
+  title="Press — Blue Collar Labs"
+  description="Press kit for Blue Collar Labs: logos, brand colors, boilerplate paragraph, founder bio, and verifiable trust signals. 501(c)(3), EIN 42-1853577."
+  ogImage="/og/press.png"
+>
+  <section class="container-wide pt-20 pb-12">
+    <p class="eyebrow">Press</p>
+    <h1 class="mt-3 text-4xl md:text-5xl font-extrabold">
+      Press kit.<br /><span class="text-volt-500">File by deadline.</span>
+    </h1>
+    <p class="mt-6 max-w-2xl text-lg text-steel-300">
+      Logos, colors, boilerplate, and the verifiable signals every editor asks for. Reach the founder through /contact — we answer press queries within 24 business hours.
+    </p>
+    <div class="mt-8 flex flex-wrap gap-3">
+      <a href="/contact" class="btn-primary">Reach the founder</a>
+      <a href="#logos" class="btn-secondary">Jump to logos</a>
+    </div>
+  </section>
+
+  <section class="container-wide py-8">
+    <div class="grid gap-4 md:grid-cols-3">
+      {stats.map((s) => (
+        <div class="rounded-2xl border border-steel-700/60 bg-steel-800/40 p-6">
+          <p class="text-3xl font-extrabold text-volt-500 font-mono">{s.value}</p>
+          <p class="mt-3 text-sm text-steel-300">{s.label}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="container-wide py-8">
+    <p class="eyebrow">Boilerplate</p>
+    <h2 class="mt-3 text-2xl font-bold">One paragraph, ready to embed.</h2>
+    <div class="mt-6 rounded-2xl border border-steel-700/60 bg-steel-800/40 p-6 md:p-8">
+      <p class="text-steel-200 leading-relaxed">{boilerplate}</p>
+    </div>
+    <p class="mt-3 text-xs text-steel-400">License: free to use in any news article or partner page. Attribution to "Blue Collar Labs" preferred but not required.</p>
+  </section>
+
+  <section class="container-wide py-8">
+    <p class="eyebrow">Mission</p>
+    <h2 class="mt-3 text-2xl font-bold">Three pillars.</h2>
+    <div class="mt-6 grid gap-4 md:grid-cols-3">
+      {pillars.map((p) => (
+        <div class="rounded-2xl border border-steel-700/60 bg-steel-800/40 p-6">
+          <p class="text-xs uppercase tracking-[0.2em] text-volt-500">{p.name}</p>
+          <p class="mt-3 text-sm text-steel-300">{p.body}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="container-wide py-8" id="logos">
+    <p class="eyebrow">Logos</p>
+    <h2 class="mt-3 text-2xl font-bold">Download the mark.</h2>
+    <p class="mt-3 max-w-2xl text-steel-300">Right-click any preview to save, or follow the link below to open the source file. Use the version that best matches your layout.</p>
+    <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {logos.map((l) => (
+        <a href={l.href} download class="group rounded-2xl border border-steel-700/60 bg-steel-800/40 p-5 transition hover:border-volt-500/60">
+          <div class="flex h-32 items-center justify-center rounded-lg bg-steel-900/60 p-4">
+            <img src={l.href} alt={l.label} class="max-h-full max-w-full" />
+          </div>
+          <p class="mt-4 text-sm font-bold text-white">{l.label}</p>
+          <p class="mt-1 text-xs text-steel-400">{l.desc}</p>
+          <p class="mt-3 text-xs font-semibold uppercase tracking-wider text-steel-400 group-hover:text-volt-500">Download →</p>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="container-wide py-8">
+    <p class="eyebrow">Brand colors</p>
+    <h2 class="mt-3 text-2xl font-bold">Hex values.</h2>
+    <div class="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      {colors.map((c) => (
+        <div class="rounded-2xl border border-steel-700/60 bg-steel-800/40 p-5">
+          <div class="h-14 rounded-lg border border-steel-700/60" style={`background:${c.hex}`}></div>
+          <p class="mt-3 text-sm font-bold text-white">{c.name}</p>
+          <p class="text-xs font-mono text-volt-500">{c.hex}</p>
+          <p class="mt-1 text-xs text-steel-400">{c.use}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="container-wide py-8">
+    <p class="eyebrow">Founder</p>
+    <h2 class="mt-3 text-2xl font-bold">Paul Mantello.</h2>
+    <p class="mt-3 max-w-3xl text-steel-300 leading-relaxed">
+      Working electrician based in Middletown, NJ. Founded Blue Collar Labs after watching AI go from a novelty to a force reshaping skilled trades in less than two years — and noticing that almost nothing was being built <em>for</em> the people swinging hammers, soldering joints, and running shops with eight employees. Available for interviews on the trades-and-AI beat, applied AI for non-technical workers, and small-shop cybersecurity.
+    </p>
+  </section>
+
+  <section class="container-wide py-12">
+    <div class="rounded-2xl border border-volt-500/30 bg-gradient-to-br from-volt-500/10 to-transparent p-8 md:p-10">
+      <p class="eyebrow">Inbound press</p>
+      <h2 class="mt-3 text-2xl font-bold">Working on a story?</h2>
+      <p class="mt-3 text-steel-300 max-w-2xl">
+        Send a note through /contact with your outlet, deadline, and the angle you're working. We respond to legitimate press queries within 24 business hours.
+      </p>
+      <div class="mt-6 flex flex-wrap gap-3">
+        <a href="/contact" class="btn-primary">Contact us</a>
+        <a href="/about" class="btn-secondary">More about BCL</a>
+      </div>
+    </div>
+  </section>
+</Layout>
