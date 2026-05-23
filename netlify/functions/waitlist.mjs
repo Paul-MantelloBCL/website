@@ -323,7 +323,7 @@ export async function handler(event) {
         ua,
       });
       await notionCreatePage(dbId, props);
-      return redirect("/thanks");
+      return redirect("/audit-thanks");
     }
 
     if (formName === "newsletter") {

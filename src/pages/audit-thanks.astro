@@ -1,0 +1,129 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { published, inProgress, TARGET } from '../data/audits';
+
+const pct = Math.round((published / TARGET) * 100);
+const remaining = TARGET - published - inProgress;
+
+const referSubject = encodeURIComponent('A free phishing audit for your shop');
+const referBody = encodeURIComponent(
+  `Hey — I just signed up for a free phishing audit from Blue Collar Labs (501(c)(3)).\n\n` +
+  `They run a consent-based simulation on your AP person, debrief the team in 30 minutes, ` +
+  `and hand you a one-page roadmap. No upsell. Year-1 audits are free.\n\n` +
+  `Worth a look: https://bluecollarlabs.org/audit-request\n`
+);
+const referMailto = `mailto:?subject=${referSubject}&body=${referBody}`;
+const referSmsBody = encodeURIComponent(
+  `Got a minute? Free phishing audit for trade shops — I just booked one. ` +
+  `https://bluecollarlabs.org/audit-request`
+);
+const referSms = `sms:?&body=${referSmsBody}`;
+---
+<Layout
+  title="Audit request received — Blue Collar Labs"
+  description="Your free phishing audit request is in. Here's what happens next, where we are on the public Year-1 progress counter, and how to send a peer shop our way."
+  ogImage="/og/audit-thanks.png"
+>
+  <section class="relative overflow-hidden">
+    <div class="absolute inset-0 -z-10 bg-gradient-to-b from-steel-800 via-steel-900 to-steel-900"></div>
+    <div class="absolute inset-x-0 top-0 -z-10 h-96 bg-[radial-gradient(ellipse_at_top,theme(colors.volt.500/15),transparent_60%)]"></div>
+    <div class="container-wide pt-20 pb-10 md:pt-28 md:pb-12">
+      <p class="eyebrow">Defend · Audit request received</p>
+      <h1 class="mt-4 max-w-4xl text-4xl sm:text-5xl md:text-6xl font-extrabold leading-[1.05]">
+        You're on the list.<br />
+        <span class="text-volt-500">We'll be in touch within 48 hours.</span>
+      </h1>
+      <p class="mt-6 max-w-2xl text-lg text-steel-300">
+        Your audit intake landed in our queue. A real person reads every submission. Expect a reply from
+        <a href="mailto:support@bluecollarlabs.org" class="text-volt-500 underline-offset-4 hover:underline">support@bluecollarlabs.org</a>
+        with either a scheduling slot or your spot on the Year-1 waitlist.
+      </p>
+    </div>
+  </section>
+
+  <section class="container-wide py-8">
+    <div class="grid gap-6 lg:grid-cols-[1.1fr_1fr] lg:items-start">
+      <div class="card">
+        <p class="eyebrow">What happens next</p>
+        <ol class="mt-3 space-y-3 text-steel-300 text-sm">
+          <li><strong class="text-steel-100">1. We read it (within 48 hours).</strong> Paul or someone on the DEFEND team reviews your shop's posture answers and matches you to the right audit slot.</li>
+          <li><strong class="text-steel-100">2. Consent call (15 min).</strong> We confirm scope, name the AP person we'll target, and lock down what's off-limits. Written consent goes on file.</li>
+          <li><strong class="text-steel-100">3. Sim runs over 1–3 days.</strong> One realistic phishing email. We log clicks, replies, attachments — no malware, no data exfil.</li>
+          <li><strong class="text-steel-100">4. Debrief (30 min) + one-page roadmap.</strong> Plain-English walk-through of what tipped (or didn't), and the three controls to put in place this month.</li>
+        </ol>
+        <p class="mt-5 text-xs text-steel-400">
+          If 48 hours pass without a reply, check spam, then email
+          <a href="mailto:support@bluecollarlabs.org" class="text-volt-500 underline-offset-4 hover:underline">support@bluecollarlabs.org</a>
+          directly — we always reply.
+        </p>
+      </div>
+
+      <div class="card">
+        <p class="eyebrow">Year-1 progress · in public</p>
+        <p class="mt-2 text-3xl font-extrabold text-steel-100">
+          <span class="text-volt-500">{published}</span>
+          <span class="text-base font-medium text-steel-300">of {TARGET} case studies published</span>
+        </p>
+        <div class="mt-4 h-2 w-full overflow-hidden rounded-full bg-steel-700/60">
+          <div class="h-full bg-volt-500 transition-all duration-500" style={`width: ${pct}%`}></div>
+        </div>
+        <p class="mt-3 text-sm text-steel-300">
+          {inProgress > 0
+            ? `${inProgress} audit${inProgress === 1 ? '' : 's'} in progress. ${remaining} slot${remaining === 1 ? '' : 's'} still open this year.`
+            : `${remaining} slot${remaining === 1 ? '' : 's'} still open this year. You may be one of them.`}
+        </p>
+        <p class="mt-3 text-sm text-steel-400">
+          Every finished audit becomes an anonymized case study on
+          <a href="/audits" class="text-volt-500 underline-offset-4 hover:underline">/audits</a>.
+          Your shop name never appears.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="container-wide py-8">
+    <div class="card">
+      <p class="eyebrow">Help us hit ten · refer a peer shop</p>
+      <h2 class="mt-3 text-2xl font-bold">Know a shop that should be on this list?</h2>
+      <p class="mt-3 max-w-2xl text-steel-300">
+        Year-1 audits are free for working trade shops — electrical, plumbing, HVAC, GC, carpentry, mechanical, landscaping, roofing.
+        Forward this to an owner you trust. One click on either button below pre-fills the message.
+      </p>
+      <div class="mt-5 flex flex-wrap gap-3">
+        <a href={referMailto} class="btn-primary">Email a shop owner</a>
+        <a href={referSms} class="btn-secondary">Text a shop owner</a>
+        <a href="/audit-request" class="btn-secondary">Copy the audit-request link</a>
+      </div>
+      <p class="mt-4 text-xs text-steel-400">
+        Direct link to share: <span class="font-mono text-steel-200">bluecollarlabs.org/audit-request</span>
+      </p>
+    </div>
+  </section>
+
+  <section class="container-wide py-8">
+    <div class="grid gap-6 md:grid-cols-3">
+      <a href="/defense-pack" class="card block transition hover:border-volt-500/50">
+        <p class="eyebrow">While you wait</p>
+        <h3 class="mt-3 text-lg font-bold">Small-Shop Defense Pack</h3>
+        <p class="mt-2 text-sm text-steel-300">Phishing teardown + a 60-minute incident plan. Print it, hand it to your AP person, fix the easy stuff before we run the sim.</p>
+      </a>
+      <a href="/trust" class="card block transition hover:border-volt-500/50">
+        <p class="eyebrow">Audit ourselves first</p>
+        <h3 class="mt-3 text-lg font-bold">Our own posture is public</h3>
+        <p class="mt-2 text-sm text-steel-300">Same five-control rubric we'll grade your shop on. We score ourselves in public on /trust before we score anyone else.</p>
+      </a>
+      <a href="/resources" class="card block transition hover:border-volt-500/50">
+        <p class="eyebrow">Free downloads</p>
+        <h3 class="mt-3 text-lg font-bold">First-10 prompts + lead magnets</h3>
+        <p class="mt-2 text-sm text-steel-300">Plain-English AI prompts every tradesman should have saved. No paywall, no account needed.</p>
+      </a>
+    </div>
+  </section>
+
+  <section class="container-wide pb-24 pt-2">
+    <div class="flex flex-wrap gap-3">
+      <a href="/" class="btn-secondary">← Back to home</a>
+      <a href="/audits" class="btn-secondary">See the audit counter →</a>
+    </div>
+  </section>
+</Layout>
